@@ -9,9 +9,9 @@
   * 點擊選項 1 之後，彈出另一個 alert, title: `"Service Unavailable"`, message: `Sorry, the call feature is not available yet. Please retry later.` (如第二張圖)
 * 選項2
   * 秀出 Check in 
-  * 點擊 Check in 後，右方會出現勾勾 (可用預設勾勾圖) (如第三張圖)
+  * 點擊 Check in 後，右方會出現勾勾 (可用 resources 內的 tick.png) (如第三張圖)
 * 選項3
-  * 透出 Cancel
+  * 秀出 Cancel
   * 點擊 Cancel 後退出 Alert sheet
 
 <img src="./resources/tableVIew_1_3_1.png" alt="drawing" width="200"/>
