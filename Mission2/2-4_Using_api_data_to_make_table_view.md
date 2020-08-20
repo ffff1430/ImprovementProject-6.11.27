@@ -8,4 +8,6 @@
 
 UI 如下，基本上和 `Mission 2-1` 一樣，照理來說，你要更改資料來源而已。
 
+這個 Mission 完成的時候， Navigation Controller 的功能應該也要正常運作，每個 Cell 點擊後，要滑入 Detail 頁面
+
 <img src="./resources/tableVIew_2_1_1.png" alt="drawing" width="200"/>
