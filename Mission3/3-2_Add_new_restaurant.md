@@ -15,6 +15,8 @@
 
 `注意! 按下儲存後，前一面的餐廳資源要更新，新加入的餐廳放到餐廳清單最上方。`
 
+`因這個 improvement project 沒有後台，建議你用 UserDefaults 等方式，存在 local 端`
+
 <img src="./resources/tableVIew_3_2_2.png" alt="drawing" width="200"/>
 
 <img src="./resources/tableVIew_3_2_1.png" alt="drawing" width="200"/>
