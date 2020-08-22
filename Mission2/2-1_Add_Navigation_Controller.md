@@ -7,6 +7,6 @@
 * 在點擊後，使用 UINavigation Controller，把第二個頁面推進來
 * 推進來後的頁面，左上方要有一個 Back 按鈕，按下去後會回到原來的 UITableView
 
-<img src="./resources/tableVIew_2_1_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_1_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_1_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_1_2.png" alt="drawing" width="200"/>

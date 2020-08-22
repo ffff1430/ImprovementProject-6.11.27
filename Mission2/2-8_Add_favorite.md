@@ -10,8 +10,8 @@
 
 資源檔在 resources/like.png
 
-<img src="./resources/tableVIew_2_8_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_8_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_8_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_8_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_8_3.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_8_3.png" alt="drawing" width="200"/>
