@@ -14,8 +14,8 @@
 
 資源檔放在 resources/onboardings
 
-<img src="./resources/tableVIew_3_5_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_5_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_3_5_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_5_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_3_5_3.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_5_3.png" alt="drawing" width="200"/>

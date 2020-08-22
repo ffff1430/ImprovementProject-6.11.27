@@ -38,4 +38,4 @@ row 2: `Instagram`
 
 About page 的資源檔在 `resources/abouticons`
 
-<img src="./resources/tableVIew_3_4_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_4_1.png" alt="drawing" width="200"/>
