@@ -9,26 +9,29 @@
 import Foundation
 
 struct Restaurant: Codable {
+    var image: String?
+    var isVisited: Bool?
     var name: String?
     var type: String?
     var location: String?
-    var image: String?
-    var isVisited: Bool?
-    
 }
 
 class RestaurantDecodable{
     
     func restaurantData(callback: @escaping (([Restaurant]) -> Void)) {
-        if let fileLocation = Bundle.main.url(forResource: "restaurants", withExtension: "json") {
-            do {
-                let data = try Data(contentsOf: fileLocation)
-                let jsonDecode = JSONDecoder()
-                let dataFromJson = try jsonDecode.decode([Restaurant].self, from: data)
-                callback(dataFromJson)
-            } catch {
-                print("error")
-            }
+        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json"
+
+        if let url = URL(string: url) {
+            URLSession.shared.dataTask(with: url) { (data, response , error) in
+                let decoder = JSONDecoder()
+                if let data = data, let dataFromJson = try?
+                   decoder.decode([Restaurant].self, from: data)
+                {
+                    callback(dataFromJson)
+                } else {
+                    print("error")
+                }
+            }.resume()
         }
     }
 }
