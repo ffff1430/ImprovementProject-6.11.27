@@ -16,6 +16,7 @@
 		DC43EA0724F33A8F008B41E5 /* FoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA0624F33A8F008B41E5 /* FoodTableViewCell.swift */; };
 		DC43EA0B24F34A11008B41E5 /* newFoodTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA0A24F34A11008B41E5 /* newFoodTableViewCell.swift */; };
 		DC43EA0D24F34A3B008B41E5 /* newFoodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA0C24F34A3B008B41E5 /* newFoodViewController.swift */; };
+		DC43EA1024F35ABA008B41E5 /* SwitchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA0F24F35ABA008B41E5 /* SwitchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		DC43EA0624F33A8F008B41E5 /* FoodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoodTableViewCell.swift; sourceTree = "<group>"; };
 		DC43EA0A24F34A11008B41E5 /* newFoodTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newFoodTableViewCell.swift; sourceTree = "<group>"; };
 		DC43EA0C24F34A3B008B41E5 /* newFoodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = newFoodViewController.swift; sourceTree = "<group>"; };
+		DC43EA0F24F35ABA008B41E5 /* SwitchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,6 +72,7 @@
 				DC401E8524EFD37600219EFA /* Assets.xcassets */,
 				DC401E8724EFD37600219EFA /* LaunchScreen.storyboard */,
 				DC401E8A24EFD37600219EFA /* Info.plist */,
+				DC43EA0F24F35ABA008B41E5 /* SwitchViewController.swift */,
 			);
 			path = improvementProject;
 			sourceTree = "<group>";
@@ -169,6 +172,7 @@
 				DC43EA0D24F34A3B008B41E5 /* newFoodViewController.swift in Sources */,
 				DC401E7D24EFD37400219EFA /* AppDelegate.swift in Sources */,
 				DC401E7F24EFD37400219EFA /* SceneDelegate.swift in Sources */,
+				DC43EA1024F35ABA008B41E5 /* SwitchViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

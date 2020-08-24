@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="KM1-OU-ka1">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="vQ4-ID-tpJ">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
@@ -7,16 +7,62 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
-        <scene sceneID="tne-QT-ifu">
+        <!--Switch View Controller-->
+        <scene sceneID="9dp-4N-xUx">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                <viewController id="vQ4-ID-tpJ" customClass="SwitchViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="C62-6b-iNV">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ArQ-tg-agS">
+                                <rect key="frame" x="0.0" y="51" width="375" height="616"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="embed" id="kCU-dk-okV"/>
+                                </connections>
+                            </containerView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Apw-zt-buk">
+                                <rect key="frame" x="122" y="11" width="131" height="32"/>
+                                <segments>
+                                    <segment title="First"/>
+                                    <segment title="Second"/>
+                                </segments>
+                                <connections>
+                                    <action selector="switchVC:" destination="vQ4-ID-tpJ" eventType="valueChanged" id="AiL-Uz-RMQ"/>
+                                </connections>
+                            </segmentedControl>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="5xC-TT-chi" firstAttribute="trailing" secondItem="Apw-zt-buk" secondAttribute="trailing" constant="122" id="LSg-ua-tyw"/>
+                            <constraint firstItem="5xC-TT-chi" firstAttribute="trailing" secondItem="ArQ-tg-agS" secondAttribute="trailing" id="OlS-Ux-64k"/>
+                            <constraint firstItem="ArQ-tg-agS" firstAttribute="top" secondItem="Apw-zt-buk" secondAttribute="bottom" constant="9" id="gX7-7s-Elk"/>
+                            <constraint firstItem="ArQ-tg-agS" firstAttribute="leading" secondItem="5xC-TT-chi" secondAttribute="leading" id="iZg-Xf-7Lk"/>
+                            <constraint firstItem="5xC-TT-chi" firstAttribute="bottom" secondItem="ArQ-tg-agS" secondAttribute="bottom" id="ncd-FV-uQm"/>
+                            <constraint firstItem="Apw-zt-buk" firstAttribute="leading" secondItem="5xC-TT-chi" secondAttribute="leading" constant="122" id="ozh-Uj-CR4"/>
+                            <constraint firstItem="Apw-zt-buk" firstAttribute="top" secondItem="5xC-TT-chi" secondAttribute="top" constant="11" id="tQS-Vv-7d2"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="5xC-TT-chi"/>
+                    </view>
+                    <connections>
+                        <outlet property="segment" destination="Apw-zt-buk" id="47H-4U-j2c"/>
+                        <outlet property="vcContent" destination="ArQ-tg-agS" id="3ph-FK-tsZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Z0t-ni-CUI" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1118" y="79"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController storyboardIdentifier="FirstViewControllerId" id="BYZ-38-t0r" customClass="ViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="616"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="gPp-al-8wZ">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="616"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="FoodVC" rowHeight="82" id="Meb-uJ-zzC" customClass="FoodTableViewCell" customModule="improvementProject" customModuleProvider="target">
@@ -102,12 +148,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-511" y="77"/>
+            <point key="canvasLocation" x="-316" y="-268"/>
         </scene>
         <!--New Food View Controller-->
         <scene sceneID="d56-w7-ULV">
             <objects>
-                <viewController id="KM1-OU-ka1" customClass="newFoodViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SecondViewControllerId" id="KM1-OU-ka1" customClass="newFoodViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wzA-LX-9i7">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -192,7 +238,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Fq7-mu-sws" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="295" y="77"/>
+            <point key="canvasLocation" x="-316" y="466"/>
         </scene>
     </scenes>
     <resources>
