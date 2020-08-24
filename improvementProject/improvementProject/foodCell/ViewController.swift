@@ -50,22 +50,18 @@ extension ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let optionMenu = UIAlertController(title: nil, message: "What do you want to do?", preferredStyle: .actionSheet)
         
-        let callActionHandler = { (action:UIAlertAction!) -> Void in
+        let callActionHandler = { (action: UIAlertAction!) -> Void in
             let alertMessage = UIAlertController(title: "無法執行撥打電話功能", message: "抱歉，撥打電話功能還未實作，請稍後再試。", preferredStyle: .alert)
             alertMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
             self.present(alertMessage, animated: true, completion: nil)
         }
         
-        if indexPath.row < 10 {
-            let callAction = UIAlertAction(title: "Call " + "123-000-0\(indexPath.row)", style: .default, handler: callActionHandler)
-            optionMenu.addAction(callAction)
-        } else {
-            let callAction = UIAlertAction(title: "Call " + "123-000-\(indexPath.row)", style: .default, handler: callActionHandler)
-            optionMenu.addAction(callAction)
-        }
+        let number = String(format: "%02d", indexPath.row)
+        let callAction = UIAlertAction(title: "Call " + "123-000-\(number)", style: .default, handler: callActionHandler)
+        optionMenu.addAction(callAction)
         
         let checkInAction = UIAlertAction(title: "Check in", style: .default, handler: {
-            (action:UIAlertAction!) -> Void in
+            (action: UIAlertAction) -> Void in
             
             let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             cell?.checkImage.isHidden = self.restaurantIsVisited[indexPath.row]
