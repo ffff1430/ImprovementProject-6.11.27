@@ -13,20 +13,18 @@ struct Restaurant: Codable {
     var type: String?
     var location: String?
     var image: String?
-    var isVisited: String?
+    var isVisited: Bool?
 }
 
 class RestaurantDecodable{
-    
-    var restaurant: [Restaurant] = []
 
-private func loadTWA00() {
-    if let fileLocation = Bundle.main.url(forResource: "TWA00", withExtension: "json") {
+    func restaurantData(callback: @escaping (([Restaurant]) -> Void)) {
+    if let fileLocation = Bundle.main.url(forResource: "restaurants", withExtension: "json") {
         do {
             let data = try Data(contentsOf: fileLocation)
             let jsonDecode = JSONDecoder()
             let dataFromJson = try jsonDecode.decode([Restaurant].self, from: data)
-            self.restaurant = dataFromJson
+            callback(dataFromJson)
         } catch {
             print("error")
         }
