@@ -15,8 +15,8 @@ detail page 的地圖，在點擊後，會滑入另一個全螢幕地圖的 VC�
 全螢幕地圖 VC 的中心也可以定在台北 101. 
 
 
-<img src="./resources/tableVIew_2_7_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_7_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_7_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_7_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_7_3.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_7_3.png" alt="drawing" width="200"/>

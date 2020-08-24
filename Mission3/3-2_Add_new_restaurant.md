@@ -17,6 +17,6 @@
 
 `因這個 improvement project 沒有後台，建議你用 UserDefaults 等方式，存在 local 端`
 
-<img src="./resources/tableVIew_3_2_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_2_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_3_2_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_2_1.png" alt="drawing" width="200"/>

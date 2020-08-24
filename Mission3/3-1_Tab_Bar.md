@@ -10,8 +10,8 @@ icon 可以在 resources 中找到。
 
 注意! 原來餐廳最表該有的過場功能和點擊事件，都應該正常發動。
 
-<img src="./resources/tableVIew_3_1_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_1_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_3_1_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_1_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_3_1_3.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_3_1_3.png" alt="drawing" width="200"/>

@@ -17,8 +17,8 @@
 顏色， font, font size 等細節，你可以自已決定
 
 
-<img src="./resources/tableVIew_2_6_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_6_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_6_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_6_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_2_6_3.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_6_3.png" alt="drawing" width="200"/>

@@ -14,8 +14,8 @@
   * 秀出 Cancel
   * 點擊 Cancel 後退出 Alert sheet
 
-<img src="./resources/tableVIew_1_3_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_1_3_1.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_1_3_2.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_1_3_2.png" alt="drawing" width="200"/>
 
-<img src="./resources/tableVIew_1_3_3.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_1_3_3.png" alt="drawing" width="200"/>
