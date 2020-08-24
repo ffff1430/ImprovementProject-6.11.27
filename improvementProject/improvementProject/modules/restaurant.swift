@@ -13,5 +13,5 @@ struct Restaurant {
     var type: String?
     var location: String?
     var image: String?
-    var isVisited: String?
+    var isVisited: Bool?
 }
