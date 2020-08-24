@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--FoodPin-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController storyboardIdentifier="FirstViewControllerId" id="BYZ-38-t0r" customClass="ViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
@@ -93,7 +93,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="yw5-9d-EgU"/>
+                    <navigationItem key="navigationItem" title="FoodPin" id="yw5-9d-EgU"/>
                     <connections>
                         <outlet property="tableView" destination="gPp-al-8wZ" id="ubL-ul-sDV"/>
                     </connections>
@@ -107,8 +107,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5WT-8d-oLH" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Lhg-3G-2Z8">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Lhg-3G-2Z8">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
