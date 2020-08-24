@@ -18,12 +18,14 @@ class ViewController: UIViewController {
     
     var restaurantTypes = ["Coffee & Tea Shop", "Cafe", "Tea House", "Austrian / Causual Drink", "French", "Bakery", "Bakery", "Chocolate", "Cafe", "American / Seafood", "American", "American", "Breakfast & Brunch", "Coffee & Tea", "Coffee & Tea", "Latin American", "Spanish", "Spanish", "Spanish", "British", "Thai"]
     
+    var restaurantIsVisited: [Bool] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        restaurantIsVisited = Array(repeating: false, count: restaurantImages.count)
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
     
 }
 
@@ -38,12 +40,44 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantImages[indexPath.row]
         cell.countryLabel.text = restaurantLocations[indexPath.row]
         cell.typeLabel.text = restaurantTypes[indexPath.row]
+        cell.checkImage.isHidden = !self.restaurantIsVisited[indexPath.row]
         return cell
     }
 }
 
 extension ViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let optionMenu = UIAlertController(title: nil, message: "What do you want to do?", preferredStyle: <#T##UIAlertController.Style#>)
+        tableView.deselectRow(at: indexPath, animated: true)
+        let optionMenu = UIAlertController(title: nil, message: "What do you want to do?", preferredStyle: .actionSheet)
+        
+        let callActionHandler = { (action:UIAlertAction!) -> Void in
+            let alertMessage = UIAlertController(title: "無法執行撥打電話功能", message: "抱歉，撥打電話功能還未實作，請稍後再試。", preferredStyle: .alert)
+            alertMessage.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            self.present(alertMessage, animated: true, completion: nil)
+        }
+        
+        if indexPath.row < 10 {
+            let callAction = UIAlertAction(title: "Call " + "123-000-0\(indexPath.row)", style: .default, handler: callActionHandler)
+            optionMenu.addAction(callAction)
+        } else {
+            let callAction = UIAlertAction(title: "Call " + "123-000-\(indexPath.row)", style: .default, handler: callActionHandler)
+            optionMenu.addAction(callAction)
+        }
+        
+        let checkInAction = UIAlertAction(title: "Check in", style: .default, handler: {
+            (action:UIAlertAction!) -> Void in
+            
+            let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
+            cell?.checkImage.isHidden = self.restaurantIsVisited[indexPath.row]
+            self.restaurantIsVisited[indexPath.row] = self.restaurantIsVisited[indexPath.row] ? false : true
+        })
+        optionMenu.addAction(checkInAction)
+        
+        
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        optionMenu.addAction(cancelAction)
+        
+        present(optionMenu, animated: true, completion: nil)
     }
 }
