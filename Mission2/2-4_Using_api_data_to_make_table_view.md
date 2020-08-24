@@ -18,4 +18,4 @@ UI 如下，基本上和 `Mission 2-1` 一樣，照理來說，你要更改資�
 
 那圖片網址就是 `https://raw.githubusercontent.com/cmmobile/ImprovementProject/master/info/pic/restaurants/barrafina.jpg`
 
-<img src="./resources/tableVIew_2_1_1.png" alt="drawing" width="200"/>
+<img src="./resources/tableView_2_1_1.png" alt="drawing" width="200"/>
