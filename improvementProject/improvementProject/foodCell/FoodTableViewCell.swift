@@ -10,12 +10,7 @@ import UIKit
 
 class FoodTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var foodImage: UIImageView!{
-        didSet{
-            foodImage.layer.cornerRadius = foodImage.bounds.width / 2
-            foodImage.clipsToBounds = true
-        }
-    }
+    @IBOutlet weak var foodImage: UIImageView!
     
     @IBOutlet weak var checkImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
