@@ -18,11 +18,8 @@ class ViewController: UIViewController {
     
     var restaurantTypes = ["Coffee & Tea Shop", "Cafe", "Tea House", "Austrian / Causual Drink", "French", "Bakery", "Bakery", "Chocolate", "Cafe", "American / Seafood", "American", "American", "Breakfast & Brunch", "Coffee & Tea", "Coffee & Tea", "Latin American", "Spanish", "Spanish", "Spanish", "British", "Thai"]
     
-    var restaurantIsVisited: [Bool] = []
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        restaurantIsVisited = Array(repeating: false, count: restaurantImages.count)
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -40,7 +37,6 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantImages[indexPath.row]
         cell.countryLabel.text = restaurantLocations[indexPath.row]
         cell.typeLabel.text = restaurantTypes[indexPath.row]
-        cell.checkImage.isHidden = !self.restaurantIsVisited[indexPath.row]
         return cell
     }
 }

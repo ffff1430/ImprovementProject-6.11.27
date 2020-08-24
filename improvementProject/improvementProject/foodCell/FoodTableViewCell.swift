@@ -11,8 +11,6 @@ import UIKit
 class FoodTableViewCell: UITableViewCell {
 
     @IBOutlet weak var foodImage: UIImageView!
-    
-    @IBOutlet weak var checkImage: UIImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
