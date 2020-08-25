@@ -18,6 +18,7 @@ class ResultViewController: UIViewController {
     var name: String = ""
     var location: String = ""
     var type: String = ""
+    var image: UIImage?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,7 +29,7 @@ class ResultViewController: UIViewController {
         nameLabel.text = name
         typeLabel.text = type
         locationLabel.text = location
-        foodImage.image = UIImage(named: name)
+        foodImage.image = image
     }
     
 

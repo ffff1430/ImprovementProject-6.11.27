@@ -16,10 +16,15 @@ class ViewController: UIViewController {
     
     var restaurantInfo: [Restaurant] = []
     
+    var foodImageData: [UIImage] = []
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        restaurant.getRestaurantData { (data, response, error) in
+        restaurant.getRestaurantDatas { (data, response, error, image)  in
             self.restaurantInfo = data
+            if let images = image, let image = UIImage(data: images) {
+                self.foodImageData.append(image)
+            }
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
@@ -43,25 +48,10 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantInfo[indexPath.row].name
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
-        
-        if var name = (restaurantInfo[indexPath.row].name)?.trimmingCharacters(in: .whitespaces).filter({ $0.isNumber || $0.isLetter }).lowercased(){
-            if name == "bourkestreetbackery"{
-                name = "bourkestreetbakery"
-            } else if name == "caskpubandkitchen"{
-                name = "caskpubkitchen"
-            }
-            let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(name).jpg")
-            if let url = url{
-                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    DispatchQueue.main.async {
-                    if let data = data, cell.nameLabel.text == self.restaurantInfo[indexPath.row].name{
-                            cell.foodImage.image = UIImage(data: data)
-                        }
-                    }
-                }
-                task.resume()
-            }
+        if foodImageData.count == 21{
+            cell.foodImage.image = foodImageData[indexPath.row]
         }
+        
         return cell
     }
 }
@@ -74,6 +64,7 @@ extension ViewController: UITableViewDelegate {
         viewcontroller.name = restaurantInfo[indexPath.row].name ?? ""
         viewcontroller.location = restaurantInfo[indexPath.row].location ?? ""
         viewcontroller.type = restaurantInfo[indexPath.row].type ?? ""
+        viewcontroller.image = foodImageData[indexPath.row]
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
 }
