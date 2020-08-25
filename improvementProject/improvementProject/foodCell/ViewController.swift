@@ -12,6 +12,10 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
+    let restaurant = RestaurantModules()
+    
+    var restaurantInfo: [Restaurant] = []
+    
     var restaurantImages = ["cafedeadend", "homei", "teakha", "cafeloisl", "petiteoyster", "forkeerestaurant", "posatelier", "bourkestreetbakery", "haighschocolate", "palominoespresso", "upstate", "traif", "grahamavenuemeats", "wafflewolf", "fiveleaves", "cafelore", "confessional", "barrafina", "donostia", "royaloak", "caskpubkitchen"]
     
     var restaurantLocations = ["Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Sydney", "Sydney", "Sydney", "New York", "New York", "New York", "New York", "New York", "New York", "New York", "London", "London", "London", "London"]
@@ -22,8 +26,10 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        restaurant.getRestaurantData { (data, response, error) in
+            self.restaurantInfo = data
+        }
     }
-    
 }
 
 extension ViewController: UITableViewDataSource {

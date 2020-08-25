@@ -17,6 +17,8 @@
 		DC43EA1324F39C15008B41E5 /* Result.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC43EA1224F39C15008B41E5 /* Result.storyboard */; };
 		DC43EA1724F39D2C008B41E5 /* ResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA1624F39D2C008B41E5 /* ResultViewController.swift */; };
 		DC43EA1A24F3AF5C008B41E5 /* restaurant.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA1924F3AF5C008B41E5 /* restaurant.swift */; };
+		DC43EA1C24F3B1C0008B41E5 /* restaurants.json in Resources */ = {isa = PBXBuildFile; fileRef = DC43EA1B24F3B1C0008B41E5 /* restaurants.json */; };
+		DC43EA1E24F49473008B41E5 /* RestaurantModules.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA1D24F49473008B41E5 /* RestaurantModules.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		DC43EA1224F39C15008B41E5 /* Result.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Result.storyboard; sourceTree = "<group>"; };
 		DC43EA1624F39D2C008B41E5 /* ResultViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultViewController.swift; sourceTree = "<group>"; };
 		DC43EA1924F3AF5C008B41E5 /* restaurant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = restaurant.swift; sourceTree = "<group>"; };
+		DC43EA1B24F3B1C0008B41E5 /* restaurants.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = restaurants.json; path = ../../info/restaurants.json; sourceTree = "<group>"; };
+		DC43EA1D24F49473008B41E5 /* RestaurantModules.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantModules.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +76,7 @@
 				DC401E8524EFD37600219EFA /* Assets.xcassets */,
 				DC401E8724EFD37600219EFA /* LaunchScreen.storyboard */,
 				DC401E8A24EFD37600219EFA /* Info.plist */,
+				DC43EA1B24F3B1C0008B41E5 /* restaurants.json */,
 			);
 			path = improvementProject;
 			sourceTree = "<group>";
@@ -99,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				DC43EA1924F3AF5C008B41E5 /* restaurant.swift */,
+				DC43EA1D24F49473008B41E5 /* RestaurantModules.swift */,
 			);
 			path = modules;
 			sourceTree = "<group>";
@@ -162,6 +168,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC401E8924EFD37600219EFA /* LaunchScreen.storyboard in Resources */,
+				DC43EA1C24F3B1C0008B41E5 /* restaurants.json in Resources */,
 				DC401E8624EFD37600219EFA /* Assets.xcassets in Resources */,
 				DC401E8424EFD37400219EFA /* Main.storyboard in Resources */,
 				DC43EA1324F39C15008B41E5 /* Result.storyboard in Resources */,
@@ -177,6 +184,7 @@
 			files = (
 				DC43EA1A24F3AF5C008B41E5 /* restaurant.swift in Sources */,
 				DC43EA1724F39D2C008B41E5 /* ResultViewController.swift in Sources */,
+				DC43EA1E24F49473008B41E5 /* RestaurantModules.swift in Sources */,
 				DC401E8124EFD37400219EFA /* ViewController.swift in Sources */,
 				DC43EA0724F33A8F008B41E5 /* FoodTableViewCell.swift in Sources */,
 				DC401E7D24EFD37400219EFA /* AppDelegate.swift in Sources */,

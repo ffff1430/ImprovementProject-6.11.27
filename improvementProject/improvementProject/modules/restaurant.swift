@@ -8,10 +8,11 @@
 
 import Foundation
 
-struct Restaurant {
+struct Restaurant: Codable {
+    var image: String?
+    var isVisited: Bool?
     var name: String?
     var type: String?
     var location: String?
-    var image: String?
-    var isVisited: Bool?
 }
+
