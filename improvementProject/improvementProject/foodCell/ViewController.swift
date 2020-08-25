@@ -44,13 +44,18 @@ extension ViewController: UITableViewDataSource {
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
         
-        if let name = (restaurantInfo[indexPath.row].name)?.trimmingCharacters(in: .whitespaces).filter({ $0.isNumber || $0.isLetter }).lowercased(){
+        if var name = (restaurantInfo[indexPath.row].name)?.trimmingCharacters(in: .whitespaces).filter({ $0.isNumber || $0.isLetter }).lowercased(){
+            if name == "bourkestreetbackery"{
+                name = "bourkestreetbakery"
+            } else if name == "caskpubandkitchen"{
+                name = "caskpubkitchen"
+            }
             let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(name).jpg")
             if let url = url{
                 let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                    if let data = data, let image = UIImage(data: data) {
-                        DispatchQueue.main.async {
-                            cell.foodImage.image = image
+                    DispatchQueue.main.async {
+                    if let data = data, cell.nameLabel.text == self.restaurantInfo[indexPath.row].name{
+                            cell.foodImage.image = UIImage(data: data)
                         }
                     }
                 }
