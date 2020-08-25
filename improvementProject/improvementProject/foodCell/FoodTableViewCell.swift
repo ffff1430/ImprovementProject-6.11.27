@@ -9,8 +9,13 @@
 import UIKit
 
 class FoodTableViewCell: UITableViewCell {
-
-    @IBOutlet weak var foodImage: UIImageView!
+    
+    @IBOutlet weak var foodImage: UIImageView! {
+        didSet{
+            foodImage.layer.cornerRadius = foodImage.bounds.width / 2
+            foodImage.clipsToBounds = true
+        }
+    }
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
@@ -19,11 +24,11 @@ class FoodTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
-
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
-
+    
 }

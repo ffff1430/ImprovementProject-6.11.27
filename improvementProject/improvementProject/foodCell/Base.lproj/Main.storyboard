@@ -50,8 +50,9 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="barrafina" translatesAutoresizingMaskIntoConstraints="NO" id="sZg-2h-8h2">
-                                                    <rect key="frame" x="15" y="11" width="60" height="60"/>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="sZg-2h-8h2">
+                                                    <rect key="frame" x="15" y="12" width="60" height="57.5"/>
+                                                    <color key="tintColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="60" id="1Md-ww-hqU"/>
                                                         <constraint firstAttribute="width" constant="60" id="wqB-I6-4b0"/>
@@ -122,6 +123,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="barrafina" width="480" height="480"/>
+        <image name="photo" catalog="system" width="64" height="46"/>
     </resources>
 </document>

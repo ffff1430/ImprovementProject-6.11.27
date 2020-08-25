@@ -17,11 +17,14 @@ class ViewController: UIViewController {
     var restaurantInfo: [Restaurant] = []
     
     required init?(coder aDecoder: NSCoder) {
-           super.init(coder: aDecoder)
-           restaurant.getRestaurantData { (data, response, error) in
-               self.restaurantInfo = data
-           }
-       }
+        super.init(coder: aDecoder)
+        restaurant.getRestaurantData { (data, response, error) in
+            self.restaurantInfo = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -40,6 +43,20 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantInfo[indexPath.row].name
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
+        
+        if let name = (restaurantInfo[indexPath.row].name)?.trimmingCharacters(in: .whitespaces).filter({ $0.isNumber || $0.isLetter }).lowercased(){
+            let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(name).jpg")
+            if let url = url{
+                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    if let data = data, let image = UIImage(data: data) {
+                        DispatchQueue.main.async {
+                            cell.foodImage.image = image
+                        }
+                    }
+                }
+                task.resume()
+            }
+        }
         return cell
     }
 }

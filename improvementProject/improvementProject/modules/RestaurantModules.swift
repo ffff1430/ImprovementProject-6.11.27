@@ -10,7 +10,7 @@ import Foundation
 
 
 class RestaurantModules{
-    
+        
     func getRestaurantData(callback: @escaping (([Restaurant], URLResponse?, Error?) -> Void)) {
         let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json"
         
