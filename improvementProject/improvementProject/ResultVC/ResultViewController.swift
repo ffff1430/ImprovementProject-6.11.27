@@ -10,37 +10,63 @@ import UIKit
 
 class ResultViewController: UIViewController {
     
+    @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var nameLabel: UILabel!
-    @IBOutlet weak var typeLabel: UILabel!
-    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var typeLabel: UILabel! {
+        didSet {
+            typeLabel.layer.cornerRadius = 5
+            typeLabel.layer.masksToBounds = true
+        }
+    }
     @IBOutlet weak var foodImage: UIImageView!
     
     var name: String = ""
     var location: String = ""
     var type: String = ""
     var image: UIImage?
+    var phone: String = ""
+    var map: String = ""
+    var article: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.dataSource = self
         setupUI()
     }
     
     func setupUI(){
         nameLabel.text = name
         typeLabel.text = type
-        locationLabel.text = location
         foodImage.image = image
     }
-    
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+extension ResultViewController: UITableViewDataSource{
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
     }
-    */
-
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        switch indexPath.row {
+        case 0:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "phoneCell", for: indexPath) as! ResultTableViewCell
+            cell.phoneLabel.text = phone
+            cell.selectionStyle = .none
+            return cell
+        case 1:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mapCell", for: indexPath) as! ResultTableViewCell
+            cell.mapLabel.text = map
+            cell.selectionStyle = .none
+            return cell
+        case 2:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath) as! ResultTableViewCell
+            cell.articleLabel.text = article
+            cell.selectionStyle = .none
+            return cell
+        default:
+            fatalError("error")
+            
+        }
+    }
 }
