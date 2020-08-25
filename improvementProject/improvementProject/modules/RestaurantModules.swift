@@ -12,7 +12,7 @@ import UIKit
 class RestaurantModules {
     
     func getRestaurantDatas(callback: @escaping (([Restaurant], URLResponse?, Error?, Data?) -> Void)) {
-        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json"
+        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/detail_restaurants.json"
         
         if let url = URL(string: url) {
             URLSession.shared.dataTask(with: url) { (data, response , error) in
@@ -31,7 +31,7 @@ class RestaurantModules {
     func getImage(restaurant: [Restaurant], complete: @escaping (([Restaurant], Data?) -> Void)) {
         for (index, _) in restaurant.enumerated(){
             if let imageName = restaurant[index].image{
-                let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(imageName).jpg")
+                let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(imageName)")
                 if let url = url{
                     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                         DispatchQueue.main.async {
