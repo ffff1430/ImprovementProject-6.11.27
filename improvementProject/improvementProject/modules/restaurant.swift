@@ -16,22 +16,3 @@ struct Restaurant: Codable {
     var location: String?
 }
 
-class RestaurantDecodable{
-    
-    func restaurantData(callback: @escaping (([Restaurant]) -> Void)) {
-        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json"
-
-        if let url = URL(string: url) {
-            URLSession.shared.dataTask(with: url) { (data, response , error) in
-                let decoder = JSONDecoder()
-                if let data = data, let dataFromJson = try?
-                   decoder.decode([Restaurant].self, from: data)
-                {
-                    callback(dataFromJson)
-                } else {
-                    print("error")
-                }
-            }.resume()
-        }
-    }
-}

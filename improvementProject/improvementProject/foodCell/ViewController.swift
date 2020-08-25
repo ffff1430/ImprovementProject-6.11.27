@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let restaurant = RestaurantDecodable()
+    let restaurant = RestaurantModules()
     
     var restaurantInfo: [Restaurant] = []
     
@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        restaurant.restaurantData { (data) in
+        restaurant.getRestaurantData { (data, response, error) in
             self.restaurantInfo = data
         }
     }
