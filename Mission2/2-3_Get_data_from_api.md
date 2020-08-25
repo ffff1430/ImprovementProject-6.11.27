@@ -8,7 +8,7 @@
 
 目標網址:
 
-`https://raw.githubusercontent.com/cmmobile/ImprovementProject/master/info/restaurants.json`
+`https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json`
 
 * 從目標網址拿到資料，資料是一包 json file
 * 拿下來的資料，可以被轉成 `Mission 2-2` 你所寫的 Restaurant array

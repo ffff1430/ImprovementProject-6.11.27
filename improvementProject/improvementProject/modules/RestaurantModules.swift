@@ -9,8 +9,9 @@
 import Foundation
 
 
-class RestaurantModules{
-        
+
+class RestaurantModules {
+    
     func getRestaurantData(callback: @escaping (([Restaurant], URLResponse?, Error?) -> Void)) {
         let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json"
         
@@ -19,7 +20,7 @@ class RestaurantModules{
                 let decoder = JSONDecoder()
                 if let data = data, let dataFromJson = try? decoder.decode([Restaurant].self, from: data) {                        callback(dataFromJson, response, error)
                 } else {
-                    print("error")
+                    callback([], response, error)
                 }
             }.resume()
         }
