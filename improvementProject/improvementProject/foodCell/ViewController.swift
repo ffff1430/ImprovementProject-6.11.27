@@ -16,18 +16,12 @@ class ViewController: UIViewController {
     
     var restaurantInfo: [Restaurant] = []
     
-    var foodImageData: [UIImage] = []
+    var foodImages: [UIImage] = []
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        restaurant.getRestaurantDatas { (data, response, error, image)  in
+        restaurant.getRestaurantDatas { (data, response, error)  in
             self.restaurantInfo = data
-            if let images = image, let image = UIImage(data: images) {
-                self.foodImageData.append(image)
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
         }
     }
     
@@ -35,6 +29,11 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData()
     }
 }
 
@@ -48,8 +47,24 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantInfo[indexPath.row].name
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
-        if foodImageData.count == 21{
-            cell.foodImage.image = foodImageData[indexPath.row]
+        
+        let url = URL(string: "https://i.pinimg.com/originals/df/80/f3/df80f367ffb8669baeabcd5564f1b638.jpg")!
+        let tempDirectory = FileManager.default.temporaryDirectory
+        let imageFileUrl = tempDirectory.appendingPathComponent(url.lastPathComponent)
+        if FileManager.default.fileExists(atPath: imageFileUrl.path) {
+           let image = UIImage(contentsOfFile: imageFileUrl.path)
+            cell.foodImage.image = image
+        } else {
+           cell.foodImage.image = nil
+           let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+              if let data = data, let image = UIImage(data: data) {
+                 try? data.write(to: imageFileUrl)
+                 DispatchQueue.main.async {
+                    cell.foodImage.image = image
+                 }
+              }
+           }
+           task.resume()
         }
         
         return cell
@@ -64,7 +79,7 @@ extension ViewController: UITableViewDelegate {
         viewcontroller.name = restaurantInfo[indexPath.row].name ?? ""
         viewcontroller.location = restaurantInfo[indexPath.row].location ?? ""
         viewcontroller.type = restaurantInfo[indexPath.row].type ?? ""
-        viewcontroller.image = foodImageData[indexPath.row]
+        viewcontroller.image = foodImages[indexPath.row]
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
 }
