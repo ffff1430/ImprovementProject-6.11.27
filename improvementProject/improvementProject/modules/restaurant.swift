@@ -14,5 +14,7 @@ struct Restaurant: Codable {
     var name: String?
     var type: String?
     var location: String?
+    var phone: String?
+    var description: String?
 }
 

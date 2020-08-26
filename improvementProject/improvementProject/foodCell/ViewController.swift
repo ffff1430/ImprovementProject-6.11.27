@@ -16,10 +16,6 @@ class ViewController: UIViewController {
     
     var restaurantInfo: [Restaurant] = []
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
@@ -38,7 +34,7 @@ class ViewController: UIViewController {
     
     func getImage(index: Int) -> UIImage{
         var images = UIImage()
-        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\( restaurantInfo[index].image ?? "").jpg"
+        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\( restaurantInfo[index].image ?? "")"
         if let url = URL(string: url) {
             print("url: \(url)")
             let tempDirectory = FileManager.default.temporaryDirectory
