@@ -14,27 +14,6 @@
                     <view key="view" contentMode="scaleToFill" id="9uX-qN-AaQ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="cE7-1M-Fim"/>
-                    </view>
-                    <connections>
-                        <outlet property="foodImage" destination="1fq-OD-gbx" id="QIn-A5-kNr"/>
-                        <outlet property="nameLabel" destination="Xae-Jx-pZY" id="kdk-Jd-89r"/>
-                        <outlet property="tableView" destination="05W-2M-Zg6" id="eRo-FY-7Xk"/>
-                        <outlet property="typeLabel" destination="qUO-m6-9sc" id="ftK-9E-hkB"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ePy-J4-vjM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-264" y="66"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="K6G-1W-4y7">
-            <objects>
-                <viewController id="cNM-tP-tOU" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="6tI-c9-6IE">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="05W-2M-Zg6">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
@@ -187,17 +166,23 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="05W-2M-Zg6" secondAttribute="trailing" id="55x-ba-Y4x"/>
-                            <constraint firstItem="05W-2M-Zg6" firstAttribute="leading" secondItem="6tI-c9-6IE" secondAttribute="leading" id="GPl-xN-0W5"/>
-                            <constraint firstItem="05W-2M-Zg6" firstAttribute="top" secondItem="6tI-c9-6IE" secondAttribute="top" id="pfz-cE-LGy"/>
-                            <constraint firstAttribute="bottom" secondItem="05W-2M-Zg6" secondAttribute="bottom" id="tJN-mK-Sv9"/>
+                            <constraint firstAttribute="trailing" secondItem="05W-2M-Zg6" secondAttribute="trailing" id="1TX-Ng-6KQ"/>
+                            <constraint firstAttribute="bottom" secondItem="05W-2M-Zg6" secondAttribute="bottom" id="AGX-dH-cHY"/>
+                            <constraint firstItem="05W-2M-Zg6" firstAttribute="top" secondItem="9uX-qN-AaQ" secondAttribute="top" id="AhY-SV-8GQ"/>
+                            <constraint firstItem="05W-2M-Zg6" firstAttribute="leading" secondItem="9uX-qN-AaQ" secondAttribute="leading" id="XAT-Tm-EYJ"/>
                         </constraints>
-                        <viewLayoutGuide key="safeArea" id="EaN-Zh-zLM"/>
+                        <viewLayoutGuide key="safeArea" id="cE7-1M-Fim"/>
                     </view>
+                    <connections>
+                        <outlet property="foodImage" destination="1fq-OD-gbx" id="QIn-A5-kNr"/>
+                        <outlet property="nameLabel" destination="Xae-Jx-pZY" id="kdk-Jd-89r"/>
+                        <outlet property="tableView" destination="05W-2M-Zg6" id="eRo-FY-7Xk"/>
+                        <outlet property="typeLabel" destination="qUO-m6-9sc" id="ftK-9E-hkB"/>
+                    </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="SW8-jk-kX8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ePy-J4-vjM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="593" y="58"/>
+            <point key="canvasLocation" x="158" y="17"/>
         </scene>
     </scenes>
     <resources>
