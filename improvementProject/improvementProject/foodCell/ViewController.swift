@@ -16,19 +16,8 @@ class ViewController: UIViewController {
     
     var restaurantInfo: [Restaurant] = []
     
-    var foodImageData: [UIImage] = []
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        restaurant.getRestaurantDatas { (data, response, error, image)  in
-            self.restaurantInfo = data
-            if let images = image, let image = UIImage(data: images) {
-                self.foodImageData.append(image)
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
     }
     
     override func viewDidLoad() {
@@ -36,7 +25,45 @@ class ViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        restaurant.getRestaurantDatas { (data, response, error)  in
+            self.restaurantInfo = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    func getImage(index: Int) -> UIImage{
+        var images = UIImage()
+        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\( restaurantInfo[index].image ?? "").jpg"
+        if let url = URL(string: url) {
+            print("url: \(url)")
+            let tempDirectory = FileManager.default.temporaryDirectory
+            let imageFileUrl = tempDirectory.appendingPathComponent(url.lastPathComponent)
+            if FileManager.default.fileExists(atPath: imageFileUrl.path) {
+                if let image = UIImage(contentsOfFile: imageFileUrl.path) {
+                    images = image
+                }
+            } else {
+                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    if let data = data, let image = UIImage(data: data) {
+                        try? data.write(to: imageFileUrl)
+                        images = image
+                    }
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+                task.resume()
+            }
+        }
+        return images
+    }
 }
+
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,9 +75,8 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantInfo[indexPath.row].name
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
-        if foodImageData.count == 21{
-            cell.foodImage.image = foodImageData[indexPath.row]
-        }
+        
+        cell.foodImage.image = getImage(index: indexPath.row)
         
         return cell
     }
@@ -64,7 +90,7 @@ extension ViewController: UITableViewDelegate {
         viewcontroller.name = restaurantInfo[indexPath.row].name ?? ""
         viewcontroller.location = restaurantInfo[indexPath.row].location ?? ""
         viewcontroller.type = restaurantInfo[indexPath.row].type ?? ""
-        viewcontroller.image = foodImageData[indexPath.row]
+        viewcontroller.image = getImage(index: indexPath.row)
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
 }
