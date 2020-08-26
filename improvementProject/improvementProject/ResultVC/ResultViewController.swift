@@ -28,10 +28,12 @@ class ResultViewController: UIViewController {
     var phone: String = ""
     var map: String = ""
     var article: String = ""
+    var mapLocation: String = "台北101"
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
+        tableView.delegate = self
         setupUI()
     }
     
@@ -42,9 +44,19 @@ class ResultViewController: UIViewController {
     }
 }
 
+extension ResultViewController: UITableViewDelegate{
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 4{
+            guard let viewcontroller = UIStoryboard(name: "Map", bundle: nil).instantiateViewController(withIdentifier: "mapVC") as? MapViewController else { return }
+            viewcontroller.locationMap = mapLocation
+            self.navigationController?.pushViewController(viewcontroller, animated: true)
+        }
+    }
+}
+
 extension ResultViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 4
+        return 5
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -67,11 +79,18 @@ extension ResultViewController: UITableViewDataSource{
             return cell
         case 3:
             let cell = tableView.dequeueReusableCell(withIdentifier: "mapTitle", for: indexPath) as! ResultTableViewCell
-            cell.mapTitleLabel.text = "Subsection title"
+            cell.mapTitleLabel.text = "How To Get Here"
+            cell.selectionStyle = .none
+            return cell
+        case 4:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "map", for: indexPath) as! MapTableViewCell
+            cell.configure(location: mapLocation)
             cell.selectionStyle = .none
             return cell
         default:
-            fatalError("error")
+            let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath) as! ResultTableViewCell
+            cell.articleLabel.text = "Failed to instantiate the content"
+            return cell
         }
     }
 }

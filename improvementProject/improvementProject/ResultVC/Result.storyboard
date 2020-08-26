@@ -12,11 +12,11 @@
             <objects>
                 <viewController storyboardIdentifier="ResultVC" id="VwN-hA-cBp" customClass="ResultViewController" customModule="improvementProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="9uX-qN-AaQ">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="05W-2M-Zg6">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="1000"/>
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <view key="tableHeaderView" contentMode="scaleToFill" id="m9R-34-9HP">
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="350"/>
@@ -200,7 +200,7 @@
                                             <outlet property="mapTitleLabel" destination="rnx-pg-TdC" id="wH1-Fm-ACT"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="215" id="cuF-vs-5Bl">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="map" rowHeight="215" id="cuF-vs-5Bl" customClass="MapTableViewCell" customModule="improvementProject" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="552" width="414" height="215"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="cuF-vs-5Bl" id="BYa-11-xrn">
@@ -209,6 +209,9 @@
                                             <subviews>
                                                 <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Ox9-WX-Rvn">
                                                     <rect key="frame" x="0.0" y="0.0" width="414" height="215"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="215" id="CEk-he-F1x"/>
+                                                    </constraints>
                                                 </mapView>
                                             </subviews>
                                             <constraints>
@@ -218,6 +221,9 @@
                                                 <constraint firstAttribute="trailing" secondItem="Ox9-WX-Rvn" secondAttribute="trailing" id="rLP-gO-wbg"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="mapView" destination="Ox9-WX-Rvn" id="rq2-xd-Jhy"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -231,7 +237,6 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cE7-1M-Fim"/>
                     </view>
-                    <size key="freeformSize" width="414" height="1000"/>
                     <connections>
                         <outlet property="foodImage" destination="1fq-OD-gbx" id="QIn-A5-kNr"/>
                         <outlet property="nameLabel" destination="Xae-Jx-pZY" id="kdk-Jd-89r"/>
@@ -241,7 +246,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ePy-J4-vjM" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-535" y="50"/>
+            <point key="canvasLocation" x="-254" y="60"/>
         </scene>
     </scenes>
     <resources>
