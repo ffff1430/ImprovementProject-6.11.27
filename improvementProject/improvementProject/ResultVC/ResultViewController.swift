@@ -20,6 +20,7 @@ class ResultViewController: UIViewController {
     }
     @IBOutlet weak var foodImage: UIImageView!
     
+    
     var name: String = ""
     var location: String = ""
     var type: String = ""
@@ -43,7 +44,7 @@ class ResultViewController: UIViewController {
 
 extension ResultViewController: UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -56,7 +57,7 @@ extension ResultViewController: UITableViewDataSource{
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "mapCell", for: indexPath) as! ResultTableViewCell
-            cell.mapLabel.text = map
+            cell.locationLabel.text = map
             cell.selectionStyle = .none
             return cell
         case 2:
@@ -64,9 +65,13 @@ extension ResultViewController: UITableViewDataSource{
             cell.articleLabel.text = article
             cell.selectionStyle = .none
             return cell
+        case 3:
+            let cell = tableView.dequeueReusableCell(withIdentifier: "mapTitle", for: indexPath) as! ResultTableViewCell
+            cell.mapTitleLabel.text = "Subsection title"
+            cell.selectionStyle = .none
+            return cell
         default:
             fatalError("error")
-            
         }
     }
 }

@@ -11,8 +11,9 @@ import UIKit
 class ResultTableViewCell: UITableViewCell {
 
     @IBOutlet weak var phoneLabel: UILabel!
-    @IBOutlet weak var mapLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
     @IBOutlet weak var articleLabel: UILabel!
+    @IBOutlet weak var mapTitleLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC36F41A24F5FE9C00E0F77F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC36F41924F5FE9C00E0F77F /* MapKit.framework */; };
 		DC401E7D24EFD37400219EFA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC401E7C24EFD37400219EFA /* AppDelegate.swift */; };
 		DC401E7F24EFD37400219EFA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC401E7E24EFD37400219EFA /* SceneDelegate.swift */; };
 		DC401E8124EFD37400219EFA /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC401E8024EFD37400219EFA /* ViewController.swift */; };
@@ -23,6 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC36F41924F5FE9C00E0F77F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		DC401E7924EFD37400219EFA /* improvementProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = improvementProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DC401E7C24EFD37400219EFA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DC401E7E24EFD37400219EFA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -45,17 +47,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC36F41A24F5FE9C00E0F77F /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DC36F41824F5FE9C00E0F77F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				DC36F41924F5FE9C00E0F77F /* MapKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		DC401E7024EFD37400219EFA = {
 			isa = PBXGroup;
 			children = (
 				DC401E7B24EFD37400219EFA /* improvementProject */,
 				DC401E7A24EFD37400219EFA /* Products */,
+				DC36F41824F5FE9C00E0F77F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
