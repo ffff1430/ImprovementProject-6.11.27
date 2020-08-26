@@ -13,7 +13,7 @@ class RestaurantModules {
             
     func getRestaurantDatas(callback: @escaping (([Restaurant], URLResponse?, Error?) -> Void)) {
         
-        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/restaurants.json"
+        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/detail_restaurants.json"
         if let url = URL(string: url) {
             URLSession.shared.dataTask(with: url) { (data, response , error) in
                 let decoder = JSONDecoder()
