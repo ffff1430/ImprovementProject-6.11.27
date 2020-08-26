@@ -16,33 +16,68 @@ class ViewController: UIViewController {
     
     var restaurantInfo: [Restaurant] = []
     
-    var restaurantImages = ["cafedeadend", "homei", "teakha", "cafeloisl", "petiteoyster", "forkeerestaurant", "posatelier", "bourkestreetbakery", "haighschocolate", "palominoespresso", "upstate", "traif", "grahamavenuemeats", "wafflewolf", "fiveleaves", "cafelore", "confessional", "barrafina", "donostia", "royaloak", "caskpubkitchen"]
-    
-    var restaurantLocations = ["Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Hong Kong", "Sydney", "Sydney", "Sydney", "New York", "New York", "New York", "New York", "New York", "New York", "New York", "London", "London", "London", "London"]
-    
-    var restaurantTypes = ["Coffee & Tea Shop", "Cafe", "Tea House", "Austrian / Causual Drink", "French", "Bakery", "Bakery", "Chocolate", "Cafe", "American / Seafood", "American", "American", "Breakfast & Brunch", "Coffee & Tea", "Coffee & Tea", "Latin American", "Spanish", "Spanish", "Spanish", "British", "Thai"]
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        restaurant.getRestaurantData { (data, response, error) in
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        restaurant.getRestaurantDatas { (data, response, error)  in
             self.restaurantInfo = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
         }
+    }
+    
+    func getImage(index: Int) -> UIImage{
+        var images = UIImage()
+        let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\( restaurantInfo[index].image ?? "").jpg"
+        if let url = URL(string: url) {
+            print("url: \(url)")
+            let tempDirectory = FileManager.default.temporaryDirectory
+            let imageFileUrl = tempDirectory.appendingPathComponent(url.lastPathComponent)
+            if FileManager.default.fileExists(atPath: imageFileUrl.path) {
+                if let image = UIImage(contentsOfFile: imageFileUrl.path) {
+                    images = image
+                }
+            } else {
+                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    if let data = data, let image = UIImage(data: data) {
+                        try? data.write(to: imageFileUrl)
+                        images = image
+                    }
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
+                    }
+                }
+                task.resume()
+            }
+        }
+        return images
     }
 }
 
+
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return restaurantImages.count
+        return restaurantInfo.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as! FoodTableViewCell
-        cell.foodImage.image = UIImage(named: restaurantImages[indexPath.row])
-        cell.nameLabel.text = restaurantImages[indexPath.row]
-        cell.countryLabel.text = restaurantLocations[indexPath.row]
-        cell.typeLabel.text = restaurantTypes[indexPath.row]
+        cell.nameLabel.text = restaurantInfo[indexPath.row].name
+        cell.countryLabel.text = restaurantInfo[indexPath.row].location
+        cell.typeLabel.text = restaurantInfo[indexPath.row].type
+        
+        cell.foodImage.image = getImage(index: indexPath.row)
+        
         return cell
     }
 }
@@ -52,9 +87,10 @@ extension ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let viewcontroller = UIStoryboard(name: "Result", bundle: nil).instantiateViewController(withIdentifier: "ResultVC") as? ResultViewController else { return }
-        viewcontroller.name = restaurantImages[indexPath.row]
-        viewcontroller.location = restaurantLocations[indexPath.row]
-        viewcontroller.type = restaurantTypes[indexPath.row]
+        viewcontroller.name = restaurantInfo[indexPath.row].name ?? ""
+        viewcontroller.location = restaurantInfo[indexPath.row].location ?? ""
+        viewcontroller.type = restaurantInfo[indexPath.row].type ?? ""
+        viewcontroller.image = getImage(index: indexPath.row)
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
 }
