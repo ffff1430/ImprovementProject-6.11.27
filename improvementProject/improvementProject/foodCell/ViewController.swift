@@ -45,13 +45,16 @@ class ViewController: UIViewController {
             let imageFileUrl = tempDirectory.appendingPathComponent(url.lastPathComponent)
             if FileManager.default.fileExists(atPath: imageFileUrl.path) {
                 if let image = UIImage(contentsOfFile: imageFileUrl.path) {
-                   images = image
+                    images = image
                 }
             } else {
                 let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                     if let data = data, let image = UIImage(data: data) {
                         try? data.write(to: imageFileUrl)
-                            images = image
+                        images = image
+                    }
+                    DispatchQueue.main.async {
+                        self.tableView.reloadData()
                     }
                 }
                 task.resume()
