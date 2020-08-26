@@ -22,6 +22,11 @@ class ViewController: UIViewController {
         tableView.delegate = self
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.hidesBarsOnSwipe = true
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         restaurant.getRestaurantDatas { (data, response, error)  in
@@ -91,5 +96,30 @@ extension ViewController: UITableViewDelegate {
         viewcontroller.type = restaurantInfo[indexPath.row].type ?? ""
         viewcontroller.image = getImage(index: indexPath.row)
         self.navigationController?.pushViewController(viewcontroller, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let deletAction = UIContextualAction(style: .destructive, title: "Delect") { (action, sourceView, complete) in
+            self.restaurantInfo.remove(at: indexPath.row)
+            
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            complete(true)
+        }
+        let heartAction = UIContextualAction(style: .normal, title: "heart") { (action, sourceView, complete) in
+            
+            let cell = tableView.cellForRow(at: indexPath) as! FoodTableViewCell
+            
+            self.restaurantInfo[indexPath.row].isVisited = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            
+            cell.heartImage.isHidden = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            complete(true)
+        }
+        deletAction.backgroundColor = UIColor(red: 231.0/255, green: 76.0/255.0, blue: 60.0/255.0, alpha: 1.0)
+        deletAction.image = UIImage(systemName: "trash")
+        heartAction.backgroundColor = UIColor(red: 254.0/255, green: 149.0/255.0, blue: 38.0/255.0, alpha: 1.0)
+        heartAction.image = UIImage(systemName: "heart")
+        
+        let swipe = UISwipeActionsConfiguration(actions: [deletAction, heartAction])
+        return swipe
     }
 }
