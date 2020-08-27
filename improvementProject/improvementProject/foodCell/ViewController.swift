@@ -21,7 +21,19 @@ class ViewController: UIViewController {
         restaurant.getRestaurantDatas { (data, response, error)  in
             for food in data{
                 if let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")") {
-                    self.restaurantInfo.append(NEWrestaurant(image: url, isVisited: food.isVisited, name: food.name ?? "", type: food.type ?? "", location: food.location ?? "", phone: food.phone ?? "", description: food.description ?? ""))
+                    let name = food.name ?? ""
+                    let type = food.type ?? ""
+                    let location = food.location ?? ""
+                    let phone = food.phone ?? ""
+                    let description = food.description ?? ""
+                    let restaurant = NEWrestaurant(image: url,
+                                                   isVisited: food.isVisited,
+                                                   name: name,
+                                                   type: type,
+                                                   location: location,
+                                                   phone: phone,
+                                                   description: description)
+                    self.restaurantInfo.append(restaurant)
                 }
             }
             DispatchQueue.main.async {
