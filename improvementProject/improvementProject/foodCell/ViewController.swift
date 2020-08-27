@@ -18,6 +18,12 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        restaurant.getRestaurantDatas { (data, response, error)  in
+            self.restaurantInfo = data
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
         tableView.dataSource = self
         tableView.delegate = self
     }
@@ -29,12 +35,6 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        restaurant.getRestaurantDatas { (data, response, error)  in
-            self.restaurantInfo = data
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
     }
     
     func getImage(index: Int) -> UIImage{
@@ -100,24 +100,24 @@ extension ViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deletAction = UIContextualAction(style: .destructive, title: "Delect") { (action, sourceView, complete) in
-            self.restaurantInfo.remove(at: indexPath.row)
+        let deletAction = UIContextualAction(style: .destructive, title: "Delect") { [weak self] (action, sourceView, complete) in
+            self?.restaurantInfo.remove(at: indexPath.row)
             
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
+            self?.tableView.deleteRows(at: [indexPath], with: .fade)
             complete(true)
         }
         let heartAction = UIContextualAction(style: .normal, title: "heart") { (action, sourceView, complete) in
             
-            let cell = tableView.cellForRow(at: indexPath) as! FoodTableViewCell
+            let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             
             self.restaurantInfo[indexPath.row].isVisited = self.restaurantInfo[indexPath.row].isVisited ? false : true
             
-            cell.heartImage.isHidden = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            cell?.heartImage.isHidden = self.restaurantInfo[indexPath.row].isVisited ? false : true
             complete(true)
         }
-        deletAction.backgroundColor = UIColor(red: 231.0/255, green: 76.0/255.0, blue: 60.0/255.0, alpha: 1.0)
+        deletAction.backgroundColor = UIColor.deletActionColor
         deletAction.image = UIImage(systemName: "trash")
-        heartAction.backgroundColor = UIColor(red: 254.0/255, green: 149.0/255.0, blue: 38.0/255.0, alpha: 1.0)
+        heartAction.backgroundColor = UIColor.heartActionColor
         heartAction.image = UIImage(systemName: "heart")
         
         let swipe = UISwipeActionsConfiguration(actions: [deletAction, heartAction])
