@@ -76,7 +76,8 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantInfo[indexPath.row].name
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
-        
+        cell.heartImage.isHidden = restaurantInfo[indexPath.row].isVisited ? false : true
+
         cell.foodImage.image = getImage(index: indexPath.row)
         
         return cell
