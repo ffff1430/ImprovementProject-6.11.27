@@ -25,6 +25,14 @@ class FoodTableViewCell: UITableViewCell {
         }
     }
     
+    var task: URLSessionDataTask?
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        task?.cancel()
+        foodImage.image = nil
+    }
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

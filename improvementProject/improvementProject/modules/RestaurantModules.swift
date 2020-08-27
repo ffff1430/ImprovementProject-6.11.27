@@ -18,7 +18,9 @@ class RestaurantModules {
             URLSession.shared.dataTask(with: url) { (data, response , error) in
                 let decoder = JSONDecoder()
                 if let data = data, let dataFromJson = try? decoder.decode([Restaurant].self, from: data) {
-                    callback(dataFromJson, response, error)
+                    DispatchQueue.main.async {
+                        callback(dataFromJson, response, error)
+                    }
                 } else {
                     callback([], response, error)
                 }
