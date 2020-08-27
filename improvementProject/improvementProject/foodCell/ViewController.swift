@@ -73,6 +73,9 @@ extension ViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as! FoodTableViewCell
+        
+        cell.heartImage.isHidden = true
+        
         cell.nameLabel.text = restaurantInfo[indexPath.row].name
         cell.countryLabel.text = restaurantInfo[indexPath.row].location
         cell.typeLabel.text = restaurantInfo[indexPath.row].type
