@@ -19,6 +19,7 @@ class FoodTableViewCell: UITableViewCell {
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var heartImage: UIImageView!
     
     override func awakeFromNib() {
         super.awakeFromNib()
