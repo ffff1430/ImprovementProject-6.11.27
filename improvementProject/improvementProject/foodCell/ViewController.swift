@@ -59,7 +59,8 @@ class ViewController: UIViewController {
     }
     
     @objc func plusTap(sender: AnyObject){
-        
+        let viewcontroller = UIStoryboard(name: "AddRestaurant", bundle: nil).instantiateViewController(withIdentifier: "AddRestaurant")
+        present(viewcontroller, animated: true, completion: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
