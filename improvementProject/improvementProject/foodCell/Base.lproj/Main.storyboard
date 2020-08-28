@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="5WT-8d-oLH">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
@@ -32,22 +32,16 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8PV-kT-jfd">
-                                                    <rect key="frame" x="83" y="31" width="207" height="20"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="20" id="4od-Ct-hZG"/>
-                                                    </constraints>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8PV-kT-jfd">
+                                                    <rect key="frame" x="83" y="31" width="207" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NXC-NZ-J1N">
                                                     <rect key="frame" x="84" y="50" width="206" height="21"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="21" id="rDK-fa-q6e"/>
-                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
-                                                    <nil key="textColor"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="sZg-2h-8h2">
@@ -76,12 +70,12 @@
                                                 <constraint firstItem="WPR-7a-9BT" firstAttribute="leading" secondItem="sZg-2h-8h2" secondAttribute="trailing" constant="8" id="LTc-fr-I3g"/>
                                                 <constraint firstItem="sZg-2h-8h2" firstAttribute="leading" secondItem="hKT-uu-tx0" secondAttribute="leading" constant="15" id="MFc-Zq-3sP"/>
                                                 <constraint firstItem="26a-c9-vTz" firstAttribute="leading" secondItem="WPR-7a-9BT" secondAttribute="trailing" constant="20" id="Ppb-T5-EP4"/>
-                                                <constraint firstItem="sZg-2h-8h2" firstAttribute="top" secondItem="hKT-uu-tx0" secondAttribute="top" constant="11" id="Saa-9X-QPW"/>
+                                                <constraint firstItem="sZg-2h-8h2" firstAttribute="top" relation="greaterThanOrEqual" secondItem="hKT-uu-tx0" secondAttribute="top" constant="11" id="Saa-9X-QPW"/>
                                                 <constraint firstItem="8PV-kT-jfd" firstAttribute="leading" secondItem="sZg-2h-8h2" secondAttribute="trailing" constant="8" id="XiQ-4d-gC4"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="26a-c9-vTz" secondAttribute="bottom" constant="5" id="ag2-47-7Kl"/>
-                                                <constraint firstItem="NXC-NZ-J1N" firstAttribute="top" secondItem="WPR-7a-9BT" secondAttribute="bottom" constant="18" id="chB-Ki-tIA"/>
+                                                <constraint firstItem="NXC-NZ-J1N" firstAttribute="top" relation="greaterThanOrEqual" secondItem="WPR-7a-9BT" secondAttribute="bottom" constant="18" id="chB-Ki-tIA"/>
                                                 <constraint firstItem="NXC-NZ-J1N" firstAttribute="leading" secondItem="sZg-2h-8h2" secondAttribute="trailing" constant="9" id="hPf-HV-nDK"/>
-                                                <constraint firstAttribute="bottom" secondItem="sZg-2h-8h2" secondAttribute="bottom" constant="11" id="jew-CA-ukF"/>
+                                                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="sZg-2h-8h2" secondAttribute="bottom" constant="11" id="jew-CA-ukF"/>
                                                 <constraint firstItem="WPR-7a-9BT" firstAttribute="top" secondItem="hKT-uu-tx0" secondAttribute="top" constant="11" id="lYo-Hn-M9x"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -112,31 +106,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="645.60000000000002" y="267.61619190404798"/>
-        </scene>
-        <!--Navigation Controller-->
-        <scene sceneID="Uzf-rd-ZQ1">
-            <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5WT-8d-oLH" sceneMemberID="viewController">
-                    <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Lhg-3G-2Z8">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
-                        <autoresizingMask key="autoresizingMask"/>
-                        <textAttributes key="titleTextAttributes">
-                            <color key="textColor" red="0.90588235289999997" green="0.29803921570000003" blue="0.23529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </textAttributes>
-                        <textAttributes key="largeTitleTextAttributes">
-                            <color key="textColor" red="0.90588235289999997" green="0.29803921570000003" blue="0.23529411759999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                        </textAttributes>
-                    </navigationBar>
-                    <nil name="viewControllers"/>
-                    <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="UAX-E3-rdW"/>
-                    </connections>
-                </navigationController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="OCM-mC-gwQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-295.19999999999999" y="267.61619190404798"/>
+            <point key="canvasLocation" x="316" y="242"/>
         </scene>
     </scenes>
     <resources>

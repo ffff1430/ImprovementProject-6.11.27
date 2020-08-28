@@ -46,7 +46,25 @@ class ViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        tableView.rowHeight = 105
+        setNavigationItemButton()
+    }
+    
+    func setNavigationItemButton() {
+        let plusButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(plusTap))
+        plusButton.tintColor = UIColor.black
+        self.navigationItem.rightBarButtonItem = plusButton
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationController?.hidesBarsOnSwipe = true
+    }
+    
+    @objc func plusTap(sender: AnyObject){
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.prefersLargeTitles = false
     }
     
     override func viewDidAppear(_ animated: Bool) {
