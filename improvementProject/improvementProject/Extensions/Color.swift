@@ -17,4 +17,8 @@ extension UIColor {
     static let heartActionColor: UIColor = {
         return UIColor(red: 254.0/255, green: 149.0/255.0, blue: 38.0/255.0, alpha: 1.0)
     }()
+    
+    static let tabBarItemColor: UIColor = {
+        return UIColor(red: 231.0/255, green: 76.0/255.0, blue: 59.0/255.0, alpha: 1.0)
+    }()
 }
