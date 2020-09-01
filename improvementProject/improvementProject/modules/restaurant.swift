@@ -18,8 +18,8 @@ struct Restaurant: Codable {
     var description: String?
 }
 
-struct NEWrestaurant {
-    var image: URL
+struct Arrangerestaurant: Codable{
+    var image: Data?
     var isVisited: Bool
     var name: String
     var type: String

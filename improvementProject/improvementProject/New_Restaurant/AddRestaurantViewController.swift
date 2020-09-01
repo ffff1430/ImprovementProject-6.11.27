@@ -8,7 +8,13 @@
 
 import UIKit
 
-class AddRestaurantViewController: UIViewController {
+protocol GetNewRestaurantData: AnyObject{
+    func didSetNewRestaurant(Arrangerestaurant: Arrangerestaurant)
+}
+
+class AddRestaurantViewController: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate{
+    
+    weak var delegate: GetNewRestaurantData?
     
     @IBOutlet weak var nameTextField: RoundedTextField! {
         didSet {
@@ -46,11 +52,12 @@ class AddRestaurantViewController: UIViewController {
             descriptionTextView.layer.masksToBounds = true
         }
     }
+    @IBOutlet weak var photoImage: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.hideKeyboardOnTap(#selector(self.dismissKeyboard))
-        // Do any additional setup after loading the view.
     }
     
     func hideKeyboardOnTap(_ selector: Selector) {
@@ -61,12 +68,71 @@ class AddRestaurantViewController: UIViewController {
     
     @objc func dismissKeyboard() {
         view.endEditing(true)
-        // do aditional stuff
+    }
+    @IBAction func saveButton(_ sender: Any) {
+        if nameTextField.text == "" || typeTextField.text == "" || addressTextField.text == "" || phoneTextField.text == "" || descriptionTextView.text == "" {
+            let alertController = UIAlertController(title: "錯誤", message: "還有空格沒輸入，沒有空格才能進行儲存", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(alertAction)
+            present(alertController, animated: true, completion: nil)
+        }
+        
+        delegate?.didSetNewRestaurant(Arrangerestaurant: Arrangerestaurant(
+            image: photoImage.image?.pngData(),
+            isVisited: false,
+            name: nameTextField.text ?? "",
+            type: typeTextField.text ?? "",
+            location: addressTextField.text ?? "",
+            phone: phoneTextField.text ?? "",
+            description: descriptionTextView.text ?? ""))
+        
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func backButtonPress(_ sender: Any) {
         dismiss(animated: true, completion: nil)
     }
+    
+    @IBAction func actionImageButton(_ sender: Any) {
+        let photoSourceRequestController = UIAlertController(title: "", message: "Choose your photo source", preferredStyle: .actionSheet)
+        
+        let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: { (action) in
+            if UIImagePickerController.isSourceTypeAvailable(.camera) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .camera
+                imagePicker.delegate = self
+                
+                self.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        
+        let photoLibraryAction = UIAlertAction(title: "Photo library", style: .default, handler: { (action) in
+            if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {
+                let imagePicker = UIImagePickerController()
+                imagePicker.allowsEditing = false
+                imagePicker.sourceType = .photoLibrary
+                imagePicker.delegate = self
+                
+                self.present(imagePicker, animated: true, completion: nil)
+            }
+        })
+        
+        photoSourceRequestController.addAction(cameraAction)
+        photoSourceRequestController.addAction(photoLibraryAction)
+        
+        present(photoSourceRequestController, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+           if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+               photoImage.image = selectedImage
+               photoImage.contentMode = .scaleAspectFill
+               photoImage.clipsToBounds = true
+           }
+           
+           dismiss(animated: true, completion: nil)
+       }
 }
 
 extension AddRestaurantViewController: UITextFieldDelegate{

@@ -14,25 +14,63 @@ class ViewController: UIViewController {
     
     let restaurant = RestaurantModules()
     
-    var restaurantInfo: [NEWrestaurant] = []
+    var restaurantInfo: [Arrangerestaurant] = []
+    
+    let newRestaurantKey = "SavedNewRestaurantArray"
+    
+    var newRestaurantData: [Arrangerestaurant] = []
+    
+    let defaults = UserDefaults.standard
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setuptableViewUI()
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.rowHeight = 105
+    }
+    
+    
+    func setuptableViewUI() {
+        if let savedPerson = defaults.object(forKey: newRestaurantKey) as? Data {
+            let decoder = JSONDecoder()
+            if let loadedPerson = try? decoder.decode([Arrangerestaurant].self, from: savedPerson) {
+                for data in loadedPerson{
+                    let name = data.name
+                    let type = data.type
+                    let location = data.location
+                    let phone = data.phone
+                    let isVisited = data.isVisited
+                    let image = data.image
+                    let description = data.description
+                    let restaurant = Arrangerestaurant(image: image,
+                                                       isVisited: isVisited,
+                                                       name: name,
+                                                       type: type,
+                                                       location: location,
+                                                       phone: phone,
+                                                       description: description)
+                    restaurantInfo.append(restaurant)
+                    newRestaurantData.append(restaurant)
+                }
+            }
+        }
         restaurant.getRestaurantDatas { (data, response, error)  in
             for food in data{
                 if let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")") {
+                    let data = try? Data(contentsOf: url)
                     let name = food.name ?? ""
                     let type = food.type ?? ""
                     let location = food.location ?? ""
                     let phone = food.phone ?? ""
                     let description = food.description ?? ""
-                    let restaurant = NEWrestaurant(image: url,
-                                                   isVisited: food.isVisited,
-                                                   name: name,
-                                                   type: type,
-                                                   location: location,
-                                                   phone: phone,
-                                                   description: description)
+                    let restaurant = Arrangerestaurant(image: data,
+                                                       isVisited: food.isVisited,
+                                                       name: name,
+                                                       type: type,
+                                                       location: location,
+                                                       phone: phone,
+                                                       description: description)
                     self.restaurantInfo.append(restaurant)
                 }
             }
@@ -40,15 +78,13 @@ class ViewController: UIViewController {
                 self.tableView.reloadData()
             }
         }
-        tableView.dataSource = self
-        tableView.delegate = self
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.rowHeight = 105
         setNavigationItemButton()
     }
+    
     
     func setNavigationItemButton() {
         let plusButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(plusTap))
@@ -59,7 +95,8 @@ class ViewController: UIViewController {
     }
     
     @objc func plusTap(sender: AnyObject){
-        let viewcontroller = UIStoryboard(name: "AddRestaurant", bundle: nil).instantiateViewController(withIdentifier: "AddRestaurant")
+        guard let viewcontroller = UIStoryboard(name: "AddRestaurant", bundle: nil).instantiateViewController(withIdentifier: "AddRestaurant") as? AddRestaurantViewController else { return }
+        viewcontroller.delegate = self
         present(viewcontroller, animated: true, completion: nil)
     }
     
@@ -70,6 +107,7 @@ class ViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
     }
     
     func getImage(restaurantsImagename: URL, tablecell: UITableViewCell) -> UIImage{
@@ -84,9 +122,9 @@ class ViewController: UIViewController {
             }
         } else {
             cell?.task = URLSession.shared.dataTask(with: restaurantsImagename) { (data, response, error) in
-                 DispatchQueue.main.async {
+                DispatchQueue.main.async {
                     if let data = data, let image = UIImage(data: data) {
-                    try? data.write(to: imageFileUrl)
+                        try? data.write(to: imageFileUrl)
                         images = image
                         self.tableView.reloadData()
                     }
@@ -96,6 +134,7 @@ class ViewController: UIViewController {
         }
         return images
     }
+    
 }
 
 extension ViewController: UITableViewDataSource {
@@ -114,8 +153,12 @@ extension ViewController: UITableViewDataSource {
         cell.nameLabel.text = restaurantInfos.name
         cell.countryLabel.text = restaurantInfos.location
         cell.typeLabel.text = restaurantInfos.type
-        cell.foodImage.image = getImage(restaurantsImagename: restaurantInfos.image, tablecell: cell)
-
+        DispatchQueue.main.async {
+            if let image = restaurantInfos.image{
+                cell.foodImage.image = UIImage(data: image)
+            }
+        }
+        
         return cell
     }
 }
@@ -131,7 +174,7 @@ extension ViewController: UITableViewDelegate {
         viewcontroller.name = restaurantInfo[indexPath.row].name
         viewcontroller.location = restaurantInfo[indexPath.row].location
         viewcontroller.type = restaurantInfo[indexPath.row].type
-        viewcontroller.image = getImage(restaurantsImagename: restaurantInfo[indexPath.row].image, tablecell: UITableViewCell() )
+        viewcontroller.image = restaurantInfo[indexPath.row].image
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
     
@@ -139,16 +182,33 @@ extension ViewController: UITableViewDelegate {
         let deletAction = UIContextualAction(style: .destructive, title: "Delect") { [weak self] (action, sourceView, complete) in
             self?.restaurantInfo.remove(at: indexPath.row)
             
+            if indexPath.row < self?.newRestaurantData.count ?? 0{
+                self?.newRestaurantData.remove(at: indexPath.row)
+                let encoder = JSONEncoder()
+                if let encoded = try? encoder.encode(self?.newRestaurantData){
+                    self?.defaults.set(encoded, forKey: self?.newRestaurantKey ?? "")
+                }
+            }
+            
             self?.tableView.deleteRows(at: [indexPath], with: .fade)
             complete(true)
         }
-        let heartAction = UIContextualAction(style: .normal, title: "heart") { (action, sourceView, complete) in
+        let heartAction = UIContextualAction(style: .normal, title: "heart") { [weak self] (action, sourceView, complete) in
             
             let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             
-            self.restaurantInfo[indexPath.row].isVisited = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            self?.restaurantInfo[indexPath.row].isVisited = self?.restaurantInfo[indexPath.row].isVisited ?? false ? false : true
             
-            cell?.heartImage.isHidden = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            if indexPath.row < self?.newRestaurantData.count ?? 0{
+                self?.newRestaurantData[indexPath.row].isVisited = self?.newRestaurantData[indexPath.row].isVisited ?? false ? false : true
+                let encoder = JSONEncoder()
+                if let encoded = try? encoder.encode(self?.newRestaurantData){
+                    self?.defaults.set(encoded, forKey: self?.newRestaurantKey ?? "")
+                }
+            }
+            
+            cell?.heartImage.isHidden = self?.restaurantInfo[indexPath.row].isVisited ?? false ? false : true
+            
             complete(true)
         }
         deletAction.backgroundColor = UIColor.deletActionColor
@@ -160,3 +220,17 @@ extension ViewController: UITableViewDelegate {
         return swipe
     }
 }
+
+extension ViewController: GetNewRestaurantData{
+    func didSetNewRestaurant(Arrangerestaurant: Arrangerestaurant) {
+        newRestaurantData.insert(Arrangerestaurant, at: 0)
+        let encoder = JSONEncoder()
+        if let encoded = try? encoder.encode(newRestaurantData){
+            defaults.set(encoded, forKey: newRestaurantKey)
+        }
+        
+        restaurantInfo.insert(Arrangerestaurant, at: 0)
+        tableView.reloadData()
+    }
+}
+

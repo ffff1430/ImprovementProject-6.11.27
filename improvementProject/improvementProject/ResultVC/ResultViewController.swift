@@ -24,7 +24,7 @@ class ResultViewController: UIViewController {
     var name: String = ""
     var location: String = ""
     var type: String = ""
-    var image: UIImage?
+    var image: Data?
     var phone: String = ""
     var map: String = ""
     var article: String = ""
@@ -39,15 +39,20 @@ class ResultViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
         navigationController?.hidesBarsOnSwipe = false
         navigationController?.setNavigationBarHidden(false, animated: true)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
     }
     
     func setupUI(){
         nameLabel.text = name
         typeLabel.text = type
-        foodImage.image = image
+        if let image = image{
+            foodImage.image = UIImage(data: image)
+        }
     }
 }
 

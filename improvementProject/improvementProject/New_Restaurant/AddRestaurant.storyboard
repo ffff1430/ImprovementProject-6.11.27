@@ -25,6 +25,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Sq0-Mw-5PZ">
                                 <rect key="frame" x="374" y="16" width="20" height="20"/>
                                 <state key="normal" backgroundImage="save"/>
+                                <connections>
+                                    <action selector="saveButton:" destination="8Rr-fZ-wdj" eventType="touchUpInside" id="yMS-Fw-Ndh"/>
+                                </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="New Restaurant" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dWa-ca-Na7">
                                 <rect key="frame" x="20" y="94" width="296" height="48"/>
@@ -36,8 +39,14 @@
                                 <rect key="frame" x="0.0" y="150" width="414" height="180"/>
                                 <color key="backgroundColor" red="0.94117647058823528" green="0.95294117647058818" blue="0.95686274509803915" alpha="0.84705882352941175" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <state key="normal" image="photo" catalog="system"/>
+                                <connections>
+                                    <action selector="actionImageButton:" destination="8Rr-fZ-wdj" eventType="touchUpInside" id="dBo-Ev-UrV"/>
+                                </connections>
                             </button>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yB8-3T-phq">
+                                <rect key="frame" x="0.0" y="151" width="414" height="177.5"/>
+                                <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AHB-hO-ySM">
                                 <rect key="frame" x="0.0" y="330" width="414" height="566"/>
                                 <subviews>
@@ -176,18 +185,22 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
+                            <constraint firstItem="yB8-3T-phq" firstAttribute="centerX" secondItem="LKI-hg-OqW" secondAttribute="centerX" id="6NQ-Ke-uqX"/>
                             <constraint firstItem="LKI-hg-OqW" firstAttribute="trailing" secondItem="4si-5Q-BJI" secondAttribute="trailing" id="7Y3-PI-545"/>
+                            <constraint firstItem="yB8-3T-phq" firstAttribute="centerY" secondItem="LKI-hg-OqW" secondAttribute="centerY" id="8MY-Xp-Yzz"/>
                             <constraint firstItem="esh-OO-OuE" firstAttribute="top" secondItem="6qt-Lg-Ssy" secondAttribute="top" constant="16" id="Esm-z5-h78"/>
                             <constraint firstItem="Ew8-rd-Aeg" firstAttribute="width" secondItem="6qt-Lg-Ssy" secondAttribute="width" multiplier="1:1" id="GDq-iS-W2m"/>
                             <constraint firstItem="4si-5Q-BJI" firstAttribute="trailing" secondItem="AHB-hO-ySM" secondAttribute="trailing" id="JwQ-p1-qQM"/>
                             <constraint firstItem="AHB-hO-ySM" firstAttribute="leading" secondItem="4si-5Q-BJI" secondAttribute="leading" id="PWY-Y9-h2h"/>
                             <constraint firstItem="LKI-hg-OqW" firstAttribute="leading" secondItem="4si-5Q-BJI" secondAttribute="leading" id="PcM-Bf-XpR"/>
                             <constraint firstItem="Sq0-Mw-5PZ" firstAttribute="top" secondItem="6qt-Lg-Ssy" secondAttribute="top" constant="16" id="SLG-Om-iUx"/>
+                            <constraint firstItem="yB8-3T-phq" firstAttribute="height" secondItem="LKI-hg-OqW" secondAttribute="height" multiplier="1:1" id="TgT-4U-GEt"/>
                             <constraint firstItem="LKI-hg-OqW" firstAttribute="height" secondItem="6qt-Lg-Ssy" secondAttribute="height" multiplier="180:896" id="WtD-rl-YS5"/>
                             <constraint firstItem="LKI-hg-OqW" firstAttribute="top" secondItem="dWa-ca-Na7" secondAttribute="bottom" constant="8" id="ZWY-0G-I6Y"/>
                             <constraint firstItem="dWa-ca-Na7" firstAttribute="leading" secondItem="4si-5Q-BJI" secondAttribute="leading" constant="20" id="ddP-XT-Z1Q"/>
                             <constraint firstItem="4si-5Q-BJI" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="dWa-ca-Na7" secondAttribute="trailing" constant="98" id="e7j-31-K8F"/>
                             <constraint firstAttribute="bottom" secondItem="AHB-hO-ySM" secondAttribute="bottom" id="eB2-As-Vyi"/>
+                            <constraint firstItem="yB8-3T-phq" firstAttribute="width" secondItem="LKI-hg-OqW" secondAttribute="width" multiplier="1:1" id="ihP-yV-rYE"/>
                             <constraint firstItem="esh-OO-OuE" firstAttribute="leading" secondItem="6qt-Lg-Ssy" secondAttribute="leading" constant="20" id="kFu-dg-KW5"/>
                             <constraint firstItem="AHB-hO-ySM" firstAttribute="top" secondItem="LKI-hg-OqW" secondAttribute="bottom" id="sAc-hu-Whc"/>
                             <constraint firstAttribute="trailing" secondItem="Sq0-Mw-5PZ" secondAttribute="trailing" constant="20" id="vKe-8y-EFW"/>
@@ -201,6 +214,7 @@
                         <outlet property="descriptionTextView" destination="oKq-8d-cqX" id="6c9-a1-qoJ"/>
                         <outlet property="nameTextField" destination="Axv-KJ-ZpI" id="pLR-gT-xMp"/>
                         <outlet property="phoneTextField" destination="lmf-Om-lNO" id="9Dn-Qa-Etb"/>
+                        <outlet property="photoImage" destination="yB8-3T-phq" id="eEM-vM-3Jj"/>
                         <outlet property="typeTextField" destination="kOp-Sa-Jmy" id="0ot-im-N3b"/>
                     </connections>
                 </viewController>
