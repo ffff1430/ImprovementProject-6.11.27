@@ -7,14 +7,17 @@
 //
 
 import UIKit
+import CoreData
 
 protocol GetNewRestaurantData: AnyObject{
-    func didSetNewRestaurant(Arrangerestaurant: Arrangerestaurant)
+    func didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo)
 }
 
 class AddRestaurantViewController: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate{
     
     weak var delegate: GetNewRestaurantData?
+    
+    var restaurant: RestaurantMO?
     
     @IBOutlet weak var nameTextField: RoundedTextField! {
         didSet {
@@ -77,7 +80,23 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             present(alertController, animated: true, completion: nil)
         }
         
-        delegate?.didSetNewRestaurant(Arrangerestaurant: Arrangerestaurant(
+        if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+            restaurant = RestaurantMO(context: appDelegate.persistentContainer.viewContext)
+            restaurant?.name = nameTextField.text
+            restaurant?.type = typeTextField.text
+            restaurant?.location = addressTextField.text
+            restaurant?.phone = phoneTextField.text
+            restaurant?.summary = descriptionTextView.text
+            restaurant?.isVisited = false
+            
+            if let restaurantImage = photoImage.image {
+                restaurant?.image = restaurantImage.pngData()
+            }
+            
+            appDelegate.saveContext()
+        }
+        
+        delegate?.didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo (
             image: photoImage.image?.pngData(),
             isVisited: false,
             name: nameTextField.text ?? "",

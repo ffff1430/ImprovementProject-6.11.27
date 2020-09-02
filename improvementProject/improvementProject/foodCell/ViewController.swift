@@ -7,20 +7,24 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let restaurant = RestaurantModules()
+    let restaurant = RestaurantManager()
     
-    var restaurantInfo: [Arrangerestaurant] = []
+    var restaurantInfo: [ArrangeRestaurantBaseInfo] = []
     
     let newRestaurantKey = "SavedNewRestaurantArray"
     
-    var newRestaurantData: [Arrangerestaurant] = []
-    
     let defaults = UserDefaults.standard
+    
+    let dispatch = DispatchGroup()
+    
+    var restaurants: RestaurantMO?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,39 +36,45 @@ class ViewController: UIViewController {
     
     
     func setuptableViewUI() {
-        if let savedPerson = defaults.object(forKey: newRestaurantKey) as? Data {
-            let decoder = JSONDecoder()
-            if let loadedPerson = try? decoder.decode([Arrangerestaurant].self, from: savedPerson) {
-                for data in loadedPerson{
-                    let name = data.name
-                    let type = data.type
-                    let location = data.location
-                    let phone = data.phone
-                    let isVisited = data.isVisited
-                    let image = data.image
-                    let description = data.description
-                    let restaurant = Arrangerestaurant(image: image,
-                                                       isVisited: isVisited,
+        
+        if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+            let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
+            let context = appDelegate.persistentContainer.viewContext
+            
+            do {
+                let fetchedObjects = try context.fetch(fetchRequest)
+                for food in fetchedObjects{
+                    let data = food.image
+                    let name = food.name ?? ""
+                    let type = food.type ?? ""
+                    let location = food.location ?? ""
+                    let phone = food.phone ?? ""
+                    let description = food.summary ?? ""
+                    let restaurant = ArrangeRestaurantBaseInfo(image: data,
+                                                       isVisited: food.isVisited,
                                                        name: name,
                                                        type: type,
                                                        location: location,
                                                        phone: phone,
                                                        description: description)
-                    restaurantInfo.append(restaurant)
-                    newRestaurantData.append(restaurant)
+                    restaurantInfo.insert(restaurant, at: 0)
                 }
+            } catch {
+                print(error)
             }
         }
+        
         restaurant.getRestaurantDatas { (data, response, error)  in
             for food in data{
-                if let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")") {
-                    let data = try? Data(contentsOf: url)
+                let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")"
+                self.dispatch.enter()
+                self.fetchImage(from: url) { (data) in
                     let name = food.name ?? ""
                     let type = food.type ?? ""
                     let location = food.location ?? ""
                     let phone = food.phone ?? ""
                     let description = food.description ?? ""
-                    let restaurant = Arrangerestaurant(image: data,
+                    let restaurant = ArrangeRestaurantBaseInfo(image: data,
                                                        isVisited: food.isVisited,
                                                        name: name,
                                                        type: type,
@@ -72,10 +82,11 @@ class ViewController: UIViewController {
                                                        phone: phone,
                                                        description: description)
                     self.restaurantInfo.append(restaurant)
+                    self.dispatch.leave()
                 }
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.dispatch.notify(queue: .main) {
+                    self.tableView.reloadData()
+                }
             }
         }
     }
@@ -83,6 +94,16 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationItemButton()
+    }
+    
+    func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {
+        let session = URLSession.shared
+        guard let url = URL(string: urlString) else { return }
+        
+        let dataTask = session.dataTask(with: url) { (data, response, error) in
+            completionHandler(data)
+        }
+        dataTask.resume()
     }
     
     
@@ -104,37 +125,6 @@ class ViewController: UIViewController {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
     }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-    }
-    
-    func getImage(restaurantsImagename: URL, tablecell: UITableViewCell) -> UIImage{
-        var images = UIImage()
-        let cell = tablecell as? FoodTableViewCell
-        
-        let tempDirectory = FileManager.default.temporaryDirectory
-        let imageFileUrl = tempDirectory.appendingPathComponent(restaurantsImagename.lastPathComponent)
-        if FileManager.default.fileExists(atPath: imageFileUrl.path) {
-            if let image = UIImage(contentsOfFile: imageFileUrl.path) {
-                images = image
-            }
-        } else {
-            cell?.task = URLSession.shared.dataTask(with: restaurantsImagename) { (data, response, error) in
-                DispatchQueue.main.async {
-                    if let data = data, let image = UIImage(data: data) {
-                        try? data.write(to: imageFileUrl)
-                        images = image
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-            cell?.task?.resume()
-        }
-        return images
-    }
-    
 }
 
 extension ViewController: UITableViewDataSource {
@@ -158,7 +148,6 @@ extension ViewController: UITableViewDataSource {
                 cell.foodImage.image = UIImage(data: image)
             }
         }
-        
         return cell
     }
 }
@@ -182,11 +171,18 @@ extension ViewController: UITableViewDelegate {
         let deletAction = UIContextualAction(style: .destructive, title: "Delect") { [weak self] (action, sourceView, complete) in
             self?.restaurantInfo.remove(at: indexPath.row)
             
-            if indexPath.row < self?.newRestaurantData.count ?? 0{
-                self?.newRestaurantData.remove(at: indexPath.row)
-                let encoder = JSONEncoder()
-                if let encoded = try? encoder.encode(self?.newRestaurantData){
-                    self?.defaults.set(encoded, forKey: self?.newRestaurantKey ?? "")
+            if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+                let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
+                let context = appDelegate.persistentContainer.viewContext
+                do {
+                    var fetchedObjects = try context.fetch(fetchRequest)
+                    if fetchedObjects.count > indexPath.row{
+                        fetchedObjects.reverse()
+                        context.delete(fetchedObjects[indexPath.row])
+                        appDelegate.saveContext()
+                    }
+                } catch {
+                    print(error)
                 }
             }
             
@@ -199,11 +195,18 @@ extension ViewController: UITableViewDelegate {
             
             self?.restaurantInfo[indexPath.row].isVisited = self?.restaurantInfo[indexPath.row].isVisited ?? false ? false : true
             
-            if indexPath.row < self?.newRestaurantData.count ?? 0{
-                self?.newRestaurantData[indexPath.row].isVisited = self?.newRestaurantData[indexPath.row].isVisited ?? false ? false : true
-                let encoder = JSONEncoder()
-                if let encoded = try? encoder.encode(self?.newRestaurantData){
-                    self?.defaults.set(encoded, forKey: self?.newRestaurantKey ?? "")
+            if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+                let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
+                let context = appDelegate.persistentContainer.viewContext
+                do {
+                    var fetchedObjects = try context.fetch(fetchRequest)
+                    if fetchedObjects.count > indexPath.row{
+                        fetchedObjects.reverse()
+                        fetchedObjects[indexPath.row].isVisited = fetchedObjects[indexPath.row].isVisited ? false : true
+                        appDelegate.saveContext()
+                    }
+                } catch {
+                    print(error)
                 }
             }
             
@@ -222,14 +225,8 @@ extension ViewController: UITableViewDelegate {
 }
 
 extension ViewController: GetNewRestaurantData{
-    func didSetNewRestaurant(Arrangerestaurant: Arrangerestaurant) {
-        newRestaurantData.insert(Arrangerestaurant, at: 0)
-        let encoder = JSONEncoder()
-        if let encoded = try? encoder.encode(newRestaurantData){
-            defaults.set(encoded, forKey: newRestaurantKey)
-        }
-        
-        restaurantInfo.insert(Arrangerestaurant, at: 0)
+    func didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo) {
+        restaurantInfo.insert(newRestaurantData, at: 0)
         tableView.reloadData()
     }
 }

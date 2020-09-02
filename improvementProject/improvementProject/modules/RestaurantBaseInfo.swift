@@ -1,5 +1,5 @@
 //
-//  restaurant.swift
+//  RestaurantBaseInfo.swift
 //  improvementProject
 //
 //  Created by chen yue on 2020/8/24.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Restaurant: Codable {
+struct RestaurantBaseInfo: Codable {
     var image: String?
     var isVisited: Bool
     var name: String?
@@ -18,7 +18,7 @@ struct Restaurant: Codable {
     var description: String?
 }
 
-struct Arrangerestaurant: Codable{
+struct ArrangeRestaurantBaseInfo {
     var image: Data?
     var isVisited: Bool
     var name: String
