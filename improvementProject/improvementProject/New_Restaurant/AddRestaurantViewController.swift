@@ -21,6 +21,8 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     var restaurant: RestaurantMO?
     
+    @IBOutlet weak var saveButton: UIButton!
+    
     @IBOutlet weak var nameTextField: RoundedTextField! {
         didSet {
             nameTextField.tag = 1
@@ -66,6 +68,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     override func viewDidLoad() {
         super.viewDidLoad()
         self.hideKeyboardOnTap(#selector(self.dismissKeyboard))
+        saveButton.isEnabled = true
     }
     
     func hideKeyboardOnTap(_ selector: Selector) {
@@ -87,6 +90,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             alertController.addAction(alertAction)
             present(alertController, animated: true, completion: nil)
         } else {
+            saveButton.isEnabled = false
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
                 restaurant = RestaurantMO(context: appDelegate.persistentContainer.viewContext)
                 restaurant?.name = nameTextField.text

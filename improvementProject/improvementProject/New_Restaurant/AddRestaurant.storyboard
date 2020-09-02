@@ -36,7 +36,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LKI-hg-OqW">
-                                <rect key="frame" x="0.0" y="150" width="414" height="180"/>
+                                <rect key="frame" x="0.0" y="150" width="414" height="220"/>
                                 <color key="backgroundColor" red="0.94117647058823528" green="0.95294117647058818" blue="0.95686274509803915" alpha="0.84705882352941175" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <connections>
@@ -44,11 +44,11 @@
                                 </connections>
                             </button>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yB8-3T-phq">
-                                <rect key="frame" x="0.0" y="150" width="414" height="180"/>
+                                <rect key="frame" x="0.0" y="150" width="414" height="220"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AHB-hO-ySM">
-                                <rect key="frame" x="0.0" y="330" width="414" height="566"/>
+                                <rect key="frame" x="0.0" y="370" width="414" height="526"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ew8-rd-Aeg">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="566"/>
@@ -89,7 +89,7 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Fill in your restaurant address" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="nQV-eD-6Wn" customClass="RoundedTextField" customModule="improvementProject" customModuleProvider="target">
                                                 <rect key="frame" x="24.5" y="221" width="365" height="40"/>
                                                 <color key="backgroundColor" red="0.94117647059999998" green="0.95294117649999999" blue="0.95686274510000002" alpha="0.84705882349999995" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="PHONE" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KOS-em-REg">
@@ -101,7 +101,7 @@
                                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Fill in your restaurant phone" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lmf-Om-lNO" customClass="RoundedTextField" customModule="improvementProject" customModuleProvider="target">
                                                 <rect key="frame" x="24.5" y="313" width="365" height="40"/>
                                                 <color key="backgroundColor" red="0.94117647059999998" green="0.95294117649999999" blue="0.95686274510000002" alpha="0.84705882349999995" colorSpace="custom" customColorSpace="sRGB"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <textInputTraits key="textInputTraits"/>
                                             </textField>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="DESCRIPTION" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0h-NQ-wYK">
@@ -195,7 +195,7 @@
                             <constraint firstItem="LKI-hg-OqW" firstAttribute="leading" secondItem="4si-5Q-BJI" secondAttribute="leading" id="PcM-Bf-XpR"/>
                             <constraint firstItem="Sq0-Mw-5PZ" firstAttribute="top" secondItem="6qt-Lg-Ssy" secondAttribute="top" constant="16" id="SLG-Om-iUx"/>
                             <constraint firstItem="yB8-3T-phq" firstAttribute="height" secondItem="LKI-hg-OqW" secondAttribute="height" multiplier="1:1" id="TgT-4U-GEt"/>
-                            <constraint firstItem="LKI-hg-OqW" firstAttribute="height" secondItem="6qt-Lg-Ssy" secondAttribute="height" multiplier="180:896" id="WtD-rl-YS5"/>
+                            <constraint firstItem="LKI-hg-OqW" firstAttribute="height" secondItem="6qt-Lg-Ssy" secondAttribute="height" multiplier="220:896" id="WtD-rl-YS5"/>
                             <constraint firstItem="LKI-hg-OqW" firstAttribute="top" secondItem="dWa-ca-Na7" secondAttribute="bottom" constant="8" id="ZWY-0G-I6Y"/>
                             <constraint firstItem="dWa-ca-Na7" firstAttribute="leading" secondItem="4si-5Q-BJI" secondAttribute="leading" constant="20" id="ddP-XT-Z1Q"/>
                             <constraint firstItem="4si-5Q-BJI" firstAttribute="trailing" relation="lessThanOrEqual" secondItem="dWa-ca-Na7" secondAttribute="trailing" constant="98" id="e7j-31-K8F"/>
@@ -215,6 +215,7 @@
                         <outlet property="nameTextField" destination="Axv-KJ-ZpI" id="pLR-gT-xMp"/>
                         <outlet property="phoneTextField" destination="lmf-Om-lNO" id="9Dn-Qa-Etb"/>
                         <outlet property="photoImage" destination="yB8-3T-phq" id="eEM-vM-3Jj"/>
+                        <outlet property="saveButton" destination="Sq0-Mw-5PZ" id="xQK-sy-duU"/>
                         <outlet property="typeTextField" destination="kOp-Sa-Jmy" id="0ot-im-N3b"/>
                     </connections>
                 </viewController>

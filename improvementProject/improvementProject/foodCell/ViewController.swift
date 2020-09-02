@@ -28,10 +28,11 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.cellLayoutMarginsFollowReadableWidth = true
+        
         setuptableViewUI()
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = 105
     }
     
     
@@ -168,7 +169,7 @@ extension ViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deletAction = UIContextualAction(style: .destructive, title: "Delect") { [weak self] (action, sourceView, complete) in
+        let deletAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, sourceView, complete) in
             self?.restaurantInfo.remove(at: indexPath.row)
             
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
@@ -189,7 +190,7 @@ extension ViewController: UITableViewDelegate {
             self?.tableView.deleteRows(at: [indexPath], with: .fade)
             complete(true)
         }
-        let heartAction = UIContextualAction(style: .normal, title: "heart") { [weak self] (action, sourceView, complete) in
+        let heartAction = UIContextualAction(style: .normal, title: nil) { [weak self] (action, sourceView, complete) in
             
             let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             
