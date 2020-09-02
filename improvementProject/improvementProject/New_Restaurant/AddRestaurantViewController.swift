@@ -17,6 +17,8 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     weak var delegate: GetNewRestaurantData?
     
+    let presetImage = UIImage(systemName: "photo")
+    
     var restaurant: RestaurantMO?
     
     @IBOutlet weak var nameTextField: RoundedTextField! {
@@ -55,11 +57,14 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             descriptionTextView.layer.masksToBounds = true
         }
     }
-    @IBOutlet weak var photoImage: UIImageView!
+    @IBOutlet weak var photoImage: UIImageView! {
+        didSet {
+            photoImage.image = presetImage
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.hideKeyboardOnTap(#selector(self.dismissKeyboard))
     }
     
@@ -72,8 +77,11 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     @objc func dismissKeyboard() {
         view.endEditing(true)
     }
+    
     @IBAction func saveButton(_ sender: Any) {
-        if nameTextField.text == "" || typeTextField.text == "" || addressTextField.text == "" || phoneTextField.text == "" || descriptionTextView.text == "" {
+        guard let presetImage = presetImage else { return }
+        if nameTextField.text == "" || typeTextField.text == "" || addressTextField.text == "" || phoneTextField.text == "" || descriptionTextView.text == "" ||
+            photoImage.image?.isEqual(to: presetImage) ?? false{
             let alertController = UIAlertController(title: "錯誤", message: "還有空格沒輸入，沒有空格才能進行儲存", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController.addAction(alertAction)
@@ -115,6 +123,9 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     @IBAction func actionImageButton(_ sender: Any) {
         let photoSourceRequestController = UIAlertController(title: "", message: "Choose your photo source", preferredStyle: .actionSheet)
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        photoSourceRequestController.addAction(cancelAction)
+        
         let cameraAction = UIAlertAction(title: "Camera", style: .default, handler: { (action) in
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 let imagePicker = UIImagePickerController()
@@ -137,11 +148,10 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             }
         })
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
         
         photoSourceRequestController.addAction(cameraAction)
         photoSourceRequestController.addAction(photoLibraryAction)
-        photoSourceRequestController.addAction(cancelAction)
         
         present(photoSourceRequestController, animated: true, completion: nil)
     }
@@ -169,3 +179,4 @@ extension AddRestaurantViewController: UITextFieldDelegate{
         return true
     }
 }
+

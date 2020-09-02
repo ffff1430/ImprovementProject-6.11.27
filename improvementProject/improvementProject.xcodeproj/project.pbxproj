@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		DC14610624FF476A00F658B0 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC14610524FF476A00F658B0 /* Image.swift */; };
 		DC36F41A24F5FE9C00E0F77F /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC36F41924F5FE9C00E0F77F /* MapKit.framework */; };
 		DC36F41C24F6067100E0F77F /* MapTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC36F41B24F6067100E0F77F /* MapTableViewCell.swift */; };
 		DC36F42124F608DE00E0F77F /* Map.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC36F42024F608DE00E0F77F /* Map.storyboard */; };
@@ -37,6 +38,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		DC14610524FF476A00F658B0 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		DC36F41924F5FE9C00E0F77F /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		DC36F41B24F6067100E0F77F /* MapTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTableViewCell.swift; sourceTree = "<group>"; };
 		DC36F42024F608DE00E0F77F /* Map.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Map.storyboard; sourceTree = "<group>"; };
@@ -101,6 +103,7 @@
 			isa = PBXGroup;
 			children = (
 				DC36F42524F7635C00E0F77F /* Color.swift */,
+				DC14610524FF476A00F658B0 /* Image.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC36F44F24F7B5D000E0F77F /* TabViewController.swift in Sources */,
+				DC14610624FF476A00F658B0 /* Image.swift in Sources */,
 				DC43EA1A24F3AF5C008B41E5 /* RestaurantBaseInfo.swift in Sources */,
 				DC36F45E24F8A4FF00E0F77F /* AddRestaurantViewController.swift in Sources */,
 				DC43EA1724F39D2C008B41E5 /* ResultViewController.swift in Sources */,

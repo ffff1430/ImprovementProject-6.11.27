@@ -43,8 +43,8 @@
                                     <action selector="actionImageButton:" destination="8Rr-fZ-wdj" eventType="touchUpInside" id="dBo-Ev-UrV"/>
                                 </connections>
                             </button>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photo" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="yB8-3T-phq">
-                                <rect key="frame" x="0.0" y="151" width="414" height="177.5"/>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yB8-3T-phq">
+                                <rect key="frame" x="0.0" y="150" width="414" height="180"/>
                                 <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </imageView>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="AHB-hO-ySM">
@@ -225,7 +225,6 @@
     </scenes>
     <resources>
         <image name="close" width="16" height="16"/>
-        <image name="photo" catalog="system" width="64" height="46"/>
         <image name="save" width="20" height="20"/>
     </resources>
 </document>
