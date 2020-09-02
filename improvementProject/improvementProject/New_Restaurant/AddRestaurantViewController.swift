@@ -78,34 +78,34 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController.addAction(alertAction)
             present(alertController, animated: true, completion: nil)
-        }
-        
-        if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
-            restaurant = RestaurantMO(context: appDelegate.persistentContainer.viewContext)
-            restaurant?.name = nameTextField.text
-            restaurant?.type = typeTextField.text
-            restaurant?.location = addressTextField.text
-            restaurant?.phone = phoneTextField.text
-            restaurant?.summary = descriptionTextView.text
-            restaurant?.isVisited = false
-            
-            if let restaurantImage = photoImage.image {
-                restaurant?.image = restaurantImage.pngData()
+        } else {
+            if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+                restaurant = RestaurantMO(context: appDelegate.persistentContainer.viewContext)
+                restaurant?.name = nameTextField.text
+                restaurant?.type = typeTextField.text
+                restaurant?.location = addressTextField.text
+                restaurant?.phone = phoneTextField.text
+                restaurant?.summary = descriptionTextView.text
+                restaurant?.isVisited = false
+                
+                if let restaurantImage = photoImage.image {
+                    restaurant?.image = restaurantImage.pngData()
+                }
+                
+                appDelegate.saveContext()
             }
             
-            appDelegate.saveContext()
+            delegate?.didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo (
+                image: photoImage.image?.pngData(),
+                isVisited: false,
+                name: nameTextField.text ?? "",
+                type: typeTextField.text ?? "",
+                location: addressTextField.text ?? "",
+                phone: phoneTextField.text ?? "",
+                description: descriptionTextView.text ?? ""))
+            
+            dismiss(animated: true, completion: nil)
         }
-        
-        delegate?.didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo (
-            image: photoImage.image?.pngData(),
-            isVisited: false,
-            name: nameTextField.text ?? "",
-            type: typeTextField.text ?? "",
-            location: addressTextField.text ?? "",
-            phone: phoneTextField.text ?? "",
-            description: descriptionTextView.text ?? ""))
-        
-        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func backButtonPress(_ sender: Any) {
@@ -137,8 +137,11 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             }
         })
         
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: nil)
+        
         photoSourceRequestController.addAction(cameraAction)
         photoSourceRequestController.addAction(photoLibraryAction)
+        photoSourceRequestController.addAction(cancelAction)
         
         present(photoSourceRequestController, animated: true, completion: nil)
     }
