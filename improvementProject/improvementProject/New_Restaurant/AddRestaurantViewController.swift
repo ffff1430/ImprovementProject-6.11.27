@@ -83,9 +83,13 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     @IBAction func saveButton(_ sender: Any) {
         guard let presetImage = presetImage else { return }
-        if nameTextField.text == "" || typeTextField.text == "" || addressTextField.text == "" || phoneTextField.text == "" || descriptionTextView.text == "" ||
-            photoImage.image?.isEqual(to: presetImage) ?? false{
+        if nameTextField.text == "" || typeTextField.text == "" || addressTextField.text == "" || phoneTextField.text == "" || descriptionTextView.text == "" {
             let alertController = UIAlertController(title: "錯誤", message: "還有空格沒輸入，沒有空格才能進行儲存", preferredStyle: .alert)
+            let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alertController.addAction(alertAction)
+            present(alertController, animated: true, completion: nil)
+        } else if photoImage.image?.isEqual(to: presetImage) ?? false {
+            let alertController = UIAlertController(title: "錯誤", message: "還有圖片沒放，圖片要有才能進行儲存", preferredStyle: .alert)
             let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController.addAction(alertAction)
             present(alertController, animated: true, completion: nil)
