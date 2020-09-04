@@ -17,24 +17,17 @@ class ViewController: UIViewController {
     
     var restaurantInfo: [ArrangeRestaurantBaseInfo] = []
     
-    let newRestaurantKey = "SavedNewRestaurantArray"
-    
-    let defaults = UserDefaults.standard
-    
     let dispatch = DispatchGroup()
     
     var restaurants: RestaurantMO?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.cellLayoutMarginsFollowReadableWidth = true
         
-        setuptableViewUI()
         tableView.dataSource = self
         tableView.delegate = self
     }
-    
     
     func setuptableViewUI() {
         
@@ -44,69 +37,104 @@ class ViewController: UIViewController {
             
             do {
                 let fetchedObjects = try context.fetch(fetchRequest)
-                for food in fetchedObjects{
-                    let data = food.image
-                    let name = food.name ?? ""
-                    let type = food.type ?? ""
-                    let location = food.location ?? ""
-                    let phone = food.phone ?? ""
-                    let description = food.summary ?? ""
-                    let restaurant = ArrangeRestaurantBaseInfo(image: data,
-                                                       isVisited: food.isVisited,
-                                                       name: name,
-                                                       type: type,
-                                                       location: location,
-                                                       phone: phone,
-                                                       description: description)
-                    restaurantInfo.insert(restaurant, at: 0)
+                //沒資料時從API拿資料
+                if fetchedObjects.count != 0 {
+                    for food in fetchedObjects{
+                        let data = food.image
+                        let name = food.name ?? ""
+                        let type = food.type ?? ""
+                        let location = food.location ?? ""
+                        let phone = food.phone ?? ""
+                        let description = food.summary ?? ""
+                        let restaurant = ArrangeRestaurantBaseInfo(image: data,
+                                                                   isVisited: food.isVisited,
+                                                                   name: name,
+                                                                   type: type,
+                                                                   location: location,
+                                                                   phone: phone,
+                                                                   description: description)
+                        restaurantInfo.insert(restaurant, at: 0)
+                    }
+                } else {
+                    //第一次的時候從API拿資料然後存資料到CoreData
+                    restaurant.getRestaurantDatas { (data, response, error)  in
+                        for (index,food) in data.enumerated(){
+                            let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")"
+                            self.dispatch.enter()
+                            self.fetchImage(from: url) { (datas) in
+                                let name = food.name ?? ""
+                                let type = food.type ?? ""
+                                let location = food.location ?? ""
+                                let phone = food.phone ?? ""
+                                let description = food.description ?? ""
+                                let restaurant = ArrangeRestaurantBaseInfo(image: datas,
+                                                                           isVisited: food.isVisited,
+                                                                           name: name,
+                                                                           type: type,
+                                                                           location: location,
+                                                                           phone: phone,
+                                                                           description: description)
+                                self.restaurantInfo.append(restaurant)
+                                self.dispatch.leave()
+                            }
+                        }
+                        self.dispatch.notify(queue: .main) {
+                            self.tableView.reloadData()
+                            for food in self.restaurantInfo.reversed() {
+                                self.insertData(contactInfo: food)
+                            }
+                        }
+                    }
                 }
             } catch {
                 print(error)
             }
         }
+    }
+    
+    //存資料到CoreData
+    func insertData(contactInfo: ArrangeRestaurantBaseInfo) {
         
-        restaurant.getRestaurantDatas { (data, response, error)  in
-            for food in data{
-                let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")"
-                self.dispatch.enter()
-                self.fetchImage(from: url) { (data) in
-                    let name = food.name ?? ""
-                    let type = food.type ?? ""
-                    let location = food.location ?? ""
-                    let phone = food.phone ?? ""
-                    let description = food.description ?? ""
-                    let restaurant = ArrangeRestaurantBaseInfo(image: data,
-                                                       isVisited: food.isVisited,
-                                                       name: name,
-                                                       type: type,
-                                                       location: location,
-                                                       phone: phone,
-                                                       description: description)
-                    self.restaurantInfo.append(restaurant)
-                    self.dispatch.leave()
-                }
-                self.dispatch.notify(queue: .main) {
-                    self.tableView.reloadData()
-                }
+        DispatchQueue.main.async {
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            
+            let managedObectContext = appDelegate.persistentContainer.viewContext
+            
+            let entity = NSEntityDescription.entity(forEntityName: "RestaurantMO", in: managedObectContext)
+            let user = NSManagedObject(entity: entity!, insertInto: managedObectContext)
+            
+            user.setValue(contactInfo.image, forKey: "image")
+            user.setValue(contactInfo.isVisited, forKey: "isVisited")
+            user.setValue(contactInfo.location, forKey: "location")
+            user.setValue(contactInfo.name, forKey: "name")
+            user.setValue(contactInfo.phone, forKey: "phone")
+            user.setValue(contactInfo.description, forKey: "summary")
+            user.setValue(contactInfo.type, forKey: "type")
+            
+            do {
+                try managedObectContext.save()
+            } catch  {
+                print("error")
             }
         }
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationItemButton()
+        setuptableViewUI()
     }
     
     func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {
-        let session = URLSession.shared
         guard let url = URL(string: urlString) else { return }
-        
-        let dataTask = session.dataTask(with: url) { (data, response, error) in
-            completionHandler(data)
+        DispatchQueue.global().sync {
+            if let data = try? Data(contentsOf: url) {
+                completionHandler(data)
+            }
         }
-        dataTask.resume()
     }
-    
     
     func setNavigationItemButton() {
         let plusButton = UIBarButtonItem(image: UIImage(named: "plus"), style: .plain, target: self, action: #selector(plusTap))
