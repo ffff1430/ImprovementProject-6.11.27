@@ -127,8 +127,6 @@ class ViewController: UIViewController {
                 print("error")
             }
         }
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -215,11 +213,9 @@ extension ViewController: UITableViewDelegate {
                 let context = appDelegate.persistentContainer.viewContext
                 do {
                     var fetchedObjects = try context.fetch(fetchRequest)
-                    if fetchedObjects.count > indexPath.row{
                         fetchedObjects.reverse()
                         context.delete(fetchedObjects[indexPath.row])
                         appDelegate.saveContext()
-                    }
                 } catch {
                     print(error)
                 }
@@ -239,11 +235,9 @@ extension ViewController: UITableViewDelegate {
                 let context = appDelegate.persistentContainer.viewContext
                 do {
                     var fetchedObjects = try context.fetch(fetchRequest)
-                    if fetchedObjects.count > indexPath.row{
                         fetchedObjects.reverse()
                         fetchedObjects[indexPath.row].isVisited = fetchedObjects[indexPath.row].isVisited ? false : true
                         appDelegate.saveContext()
-                    }
                 } catch {
                     print(error)
                 }
