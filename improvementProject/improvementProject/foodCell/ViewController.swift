@@ -21,9 +21,16 @@ class ViewController: UIViewController {
     
     var restaurants: RestaurantMO?
     
+    let defaults = UserDefaults.standard
+    
+    var isFirstTimeLogin: Bool = false
+    
+    var isFirstTimeLoginKey: String = "isFirstTimeLoginKey"
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.cellLayoutMarginsFollowReadableWidth = true
+        isFirstTimeLogin = defaults.bool(forKey: isFirstTimeLoginKey)
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -38,7 +45,7 @@ class ViewController: UIViewController {
             do {
                 let fetchedObjects = try context.fetch(fetchRequest)
                 //沒資料時從API拿資料
-                if fetchedObjects.count != 0 {
+                if isFirstTimeLogin != false {
                     for food in fetchedObjects{
                         let data = food.image
                         let name = food.name ?? ""
@@ -58,7 +65,7 @@ class ViewController: UIViewController {
                 } else {
                     //第一次的時候從API拿資料然後存資料到CoreData
                     restaurant.getRestaurantDatas { (data, response, error)  in
-                        for (index,food) in data.enumerated(){
+                        for food in data{
                             let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")"
                             self.dispatch.enter()
                             self.fetchImage(from: url) { (datas) in
@@ -83,6 +90,8 @@ class ViewController: UIViewController {
                             for food in self.restaurantInfo.reversed() {
                                 self.insertData(contactInfo: food)
                             }
+                            self.isFirstTimeLogin = true
+                            self.defaults.set(self.isFirstTimeLogin, forKey: self.isFirstTimeLoginKey)
                         }
                     }
                 }
