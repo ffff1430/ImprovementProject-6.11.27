@@ -138,8 +138,10 @@ class ViewController: UIViewController {
     func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {
         guard let url = URL(string: urlString) else { return }
         DispatchQueue.global().sync {
-            if let data = try? Data(contentsOf: url) {
-                completionHandler(data)
+            DispatchQueue.main.async {
+                if let data = try? Data(contentsOf: url) {
+                    completionHandler(data)
+                }
             }
         }
     }
@@ -172,14 +174,13 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as? FoodTableViewCell else { return UITableViewCell() }
         
-        cell.heartImage.isHidden = true
-        
-        cell.heartImage.isHidden = restaurantInfo[indexPath.row].isVisited ? false : true
-        
         let restaurantInfos = restaurantInfo[indexPath.row]
         cell.nameLabel.text = restaurantInfos.name
         cell.countryLabel.text = restaurantInfos.location
         cell.typeLabel.text = restaurantInfos.type
+        if restaurantInfos.isVisited == true {
+            cell.heartImage.image = UIImage(named: "like")
+        }
         DispatchQueue.main.async {
             if let image = restaurantInfos.image{
                 cell.foodImage.image = UIImage(data: image)
@@ -243,7 +244,11 @@ extension ViewController: UITableViewDelegate {
                 }
             }
             
-            cell?.heartImage.isHidden = self?.restaurantInfo[indexPath.row].isVisited ?? false ? false : true
+            if self?.restaurantInfo[indexPath.row].isVisited == true {
+                cell?.heartImage.image = UIImage(named: "like")
+            } else {
+                cell?.heartImage.image = nil
+            }
             
             complete(true)
         }

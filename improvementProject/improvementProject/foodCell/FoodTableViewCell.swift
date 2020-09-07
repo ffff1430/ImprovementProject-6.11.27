@@ -21,17 +21,16 @@ class FoodTableViewCell: UITableViewCell {
     @IBOutlet weak var typeLabel: UILabel!
     @IBOutlet weak var heartImage: UIImageView!
     
-    var task: URLSessionDataTask?
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        task?.cancel()
         foodImage.image = nil
+        heartImage.image = nil
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
+        heartImage.image = nil
     }
     
     override func setSelected(_ selected: Bool, animated: Bool) {
