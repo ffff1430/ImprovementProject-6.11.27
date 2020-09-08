@@ -9,7 +9,8 @@
 import UIKit
 import CoreData
 
-protocol GetNewRestaurantData: AnyObject{
+//修改CodingStyle
+protocol GetNewRestaurantData: AnyObject {
     func didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo)
 }
 
@@ -17,44 +18,26 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     weak var delegate: GetNewRestaurantData?
     
-    let presetImage = UIImage(systemName: "photo")
+    private let presetImage = UIImage(systemName: "photo")
     
-    var restaurant: RestaurantMO?
+    private var restaurant: RestaurantMO?
     
     @IBOutlet weak var saveButton: UIButton!
     
     @IBOutlet weak var nameTextField: RoundedTextField! {
         didSet {
-            nameTextField.tag = 1
             nameTextField.becomeFirstResponder()
-            nameTextField.delegate = self
         }
     }
     
-    @IBOutlet weak var typeTextField: RoundedTextField! {
-        didSet {
-            typeTextField.tag = 2
-            typeTextField.delegate = self
-        }
-    }
+    @IBOutlet weak var typeTextField: RoundedTextField!
     
-    @IBOutlet weak var addressTextField: RoundedTextField! {
-        didSet {
-            addressTextField.tag = 3
-            addressTextField.delegate = self
-        }
-    }
+    @IBOutlet weak var addressTextField: RoundedTextField!
     
-    @IBOutlet weak var phoneTextField: RoundedTextField! {
-        didSet {
-            phoneTextField.tag = 4
-            phoneTextField.delegate = self
-        }
-    }
+    @IBOutlet weak var phoneTextField: RoundedTextField!
     
     @IBOutlet weak var descriptionTextView: UITextView! {
         didSet {
-            descriptionTextView.tag = 5
             descriptionTextView.layer.cornerRadius = 5.0
             descriptionTextView.layer.masksToBounds = true
         }
@@ -69,9 +52,24 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
         super.viewDidLoad()
         self.hideKeyboardOnTap(#selector(self.dismissKeyboard))
         saveButton.isEnabled = true
+        setTextField()
     }
     
-    func hideKeyboardOnTap(_ selector: Selector) {
+    func setTextField() {
+        setSettingInTextField(textfield: nameTextField, tag: 1)
+        setSettingInTextField(textfield: typeTextField, tag: 2)
+        setSettingInTextField(textfield: addressTextField, tag: 3)
+        setSettingInTextField(textfield: phoneTextField, tag: 4)
+        descriptionTextView.tag = 5
+    }
+    
+    //把delegate指定給TextField
+    func setSettingInTextField(textfield: UITextField, tag: Int) {
+        textfield.delegate = self
+        textfield.tag = tag
+    }
+    
+    private func hideKeyboardOnTap(_ selector: Selector) {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: selector)
         tap.cancelsTouchesInView = false
         view.addGestureRecognizer(tap)
@@ -81,18 +79,22 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
         view.endEditing(true)
     }
     
+    //已作修正改成用func去判斷TextField是否為空值
+    func checkTextFieldisEmpty() -> Bool {
+        if nameTextField.text?.isEmpty ?? true || typeTextField.text?.isEmpty ?? true || phoneTextField.text?.isEmpty ?? true || addressTextField.text?.isEmpty ?? true || descriptionTextView.text.isEmpty {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     @IBAction func saveButton(_ sender: Any) {
         guard let presetImage = presetImage else { return }
-        if nameTextField.text == "" || typeTextField.text == "" || addressTextField.text == "" || phoneTextField.text == "" || descriptionTextView.text == "" {
-            let alertController = UIAlertController(title: "錯誤", message: "還有空格沒輸入，沒有空格才能進行儲存", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alertController.addAction(alertAction)
-            present(alertController, animated: true, completion: nil)
-        } else if photoImage.image?.isEqual(to: presetImage) ?? false {
-            let alertController = UIAlertController(title: "錯誤", message: "還有圖片沒放，圖片要有才能進行儲存", preferredStyle: .alert)
-            let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-            alertController.addAction(alertAction)
-            present(alertController, animated: true, completion: nil)
+        if checkTextFieldisEmpty() {
+            alertAction(message: "還有空格沒輸入，沒有空格才能進行儲存")
+            //已作修正直接使用 isEqual(Any)就可以了，之前做法是多餘的
+        } else if photoImage.image?.isEqual(presetImage) ?? false {
+            alertAction(message: "還有圖片沒放，圖片要有才能進行儲存")
         } else {
             saveButton.isEnabled = false
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
@@ -105,14 +107,14 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
                 restaurant?.isVisited = false
                 
                 if let restaurantImage = photoImage.image {
-                    restaurant?.image = restaurantImage.pngData()
+                    restaurant?.image = getImageData(image: restaurantImage)
                 }
                 
                 appDelegate.saveContext()
             }
             
             delegate?.didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo (
-                image: photoImage.image?.pngData(),
+                image: getImageData(image: photoImage.image),
                 isVisited: false,
                 name: nameTextField.text ?? "",
                 type: typeTextField.text ?? "",
@@ -122,6 +124,26 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             
             dismiss(animated: true, completion: nil)
         }
+    }
+    
+    func getImageData(image: UIImage?) -> Data? {
+        let data = image?.jpegData(compressionQuality: 0.8)
+        let filename = getDocumentsDirectory().appendingPathComponent("\(UUID().uuidString).jpeg")
+        try? data?.write(to: filename)
+        return data
+    }
+    
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
+    }
+    
+    //alert改成在func做
+    func alertAction(message: String) {
+        let alertController = UIAlertController(title: "錯誤", message: message, preferredStyle: .alert)
+        let alertAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+        alertController.addAction(alertAction)
+        present(alertController, animated: true, completion: nil)
     }
     
     @IBAction func backButtonPress(_ sender: Any) {
@@ -155,8 +177,6 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
                 self.present(imagePicker, animated: true, completion: nil)
             }
         })
-        
-        
         
         photoSourceRequestController.addAction(cameraAction)
         photoSourceRequestController.addAction(photoLibraryAction)

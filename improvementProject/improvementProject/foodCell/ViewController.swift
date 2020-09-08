@@ -32,12 +32,13 @@ class ViewController: UIViewController {
         tableView.cellLayoutMarginsFollowReadableWidth = true
         //使用UserDefaults 去存是否第一次登入 第一次登入去API拿預設的餐廳，第二次登入從CoreData 拿資料
         isFirstTimeLogin = defaults.bool(forKey: isFirstTimeLoginKey)
+        getRestaurantInfoData()
         
         tableView.dataSource = self
         tableView.delegate = self
     }
     
-    func setuptableViewUI() {
+    func getRestaurantInfoData() {
         
         if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
             let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
@@ -45,8 +46,8 @@ class ViewController: UIViewController {
             
             do {
                 let fetchedObjects = try context.fetch(fetchRequest)
-                //沒資料時從API拿資料
-                if isFirstTimeLogin != false {
+                //第二次進來才會跑CoreData
+                if isFirstTimeLogin {
                     for food in fetchedObjects{
                         let data = food.image
                         let name = food.name ?? ""
@@ -61,6 +62,7 @@ class ViewController: UIViewController {
                                                                    location: location,
                                                                    phone: phone,
                                                                    description: description)
+                        //用insert我新增的資料才會在最上面
                         restaurantInfo.insert(restaurant, at: 0)
                     }
                 } else {
@@ -88,9 +90,11 @@ class ViewController: UIViewController {
                         }
                         self.dispatch.notify(queue: .main) {
                             self.tableView.reloadData()
+                            //如果沒反轉，第二次登入的時後存在CoreData的API資料會是反的
                             for food in self.restaurantInfo.reversed() {
                                 self.insertData(contactInfo: food)
                             }
+                            //這邊會改變isFirstTimeLogin的值
                             self.isFirstTimeLogin = true
                             self.defaults.set(self.isFirstTimeLogin, forKey: self.isFirstTimeLoginKey)
                         }
@@ -106,25 +110,28 @@ class ViewController: UIViewController {
     func insertData(contactInfo: ArrangeRestaurantBaseInfo) {
         
         DispatchQueue.main.async {
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
             
-            let managedObectContext = appDelegate.persistentContainer.viewContext
-            
-            let entity = NSEntityDescription.entity(forEntityName: "RestaurantMO", in: managedObectContext)
-            let user = NSManagedObject(entity: entity!, insertInto: managedObectContext)
-            
-            user.setValue(contactInfo.image, forKey: "image")
-            user.setValue(contactInfo.isVisited, forKey: "isVisited")
-            user.setValue(contactInfo.location, forKey: "location")
-            user.setValue(contactInfo.name, forKey: "name")
-            user.setValue(contactInfo.phone, forKey: "phone")
-            user.setValue(contactInfo.description, forKey: "summary")
-            user.setValue(contactInfo.type, forKey: "type")
-            
-            do {
-                try managedObectContext.save()
-            } catch  {
-                print("error")
+            if let managedObectContext = appDelegate?.persistentContainer.viewContext {
+                
+                //已把驚嘆號去掉
+                if let entity = NSEntityDescription.entity(forEntityName: "RestaurantMO", in: managedObectContext) {
+                    let user = NSManagedObject(entity: entity, insertInto: managedObectContext)
+                    
+                    user.setValue(contactInfo.image, forKey: "image")
+                    user.setValue(contactInfo.isVisited, forKey: "isVisited")
+                    user.setValue(contactInfo.location, forKey: "location")
+                    user.setValue(contactInfo.name, forKey: "name")
+                    user.setValue(contactInfo.phone, forKey: "phone")
+                    user.setValue(contactInfo.description, forKey: "summary")
+                    user.setValue(contactInfo.type, forKey: "type")
+                    
+                    do {
+                        try managedObectContext.save()
+                    } catch  {
+                        print("error")
+                    }
+                }
             }
         }
     }
@@ -132,16 +139,13 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationItemButton()
-        setuptableViewUI()
     }
     
     func fetchImage(from urlString: String, completionHandler: @escaping (_ data: Data?) -> ()) {
         guard let url = URL(string: urlString) else { return }
         DispatchQueue.global().sync {
-            DispatchQueue.main.async {
-                if let data = try? Data(contentsOf: url) {
-                    completionHandler(data)
-                }
+            if let data = try? Data(contentsOf: url) {
+                completionHandler(data)
             }
         }
     }
@@ -182,7 +186,8 @@ extension ViewController: UITableViewDataSource {
             cell.heartImage.image = UIImage(named: "like")
         }
         DispatchQueue.main.async {
-            if let image = restaurantInfos.image{
+            //修改CodingStyle
+            if let image = restaurantInfos.image {
                 cell.foodImage.image = UIImage(data: image)
             }
         }
@@ -214,6 +219,7 @@ extension ViewController: UITableViewDelegate {
                 let context = appDelegate.persistentContainer.viewContext
                 do {
                     var fetchedObjects = try context.fetch(fetchRequest)
+                        //因為存進CoreData的資料是反的所以要經過反轉，才會刪除正確的Cell
                         fetchedObjects.reverse()
                         context.delete(fetchedObjects[indexPath.row])
                         appDelegate.saveContext()
@@ -229,6 +235,7 @@ extension ViewController: UITableViewDelegate {
             
             let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             
+            //一開始都是預設為False，使用三元運算子，當觸發UIContextualAction就會把觸發那段的Cell的isVisited改成另一個布林值
             self?.restaurantInfo[indexPath.row].isVisited = self?.restaurantInfo[indexPath.row].isVisited ?? false ? false : true
             
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
@@ -236,6 +243,7 @@ extension ViewController: UITableViewDelegate {
                 let context = appDelegate.persistentContainer.viewContext
                 do {
                     var fetchedObjects = try context.fetch(fetchRequest)
+                    //因為存進CoreData的資料是反的所以要經過反轉，愛心才會在正確的Cell上顯示
                         fetchedObjects.reverse()
                         fetchedObjects[indexPath.row].isVisited = fetchedObjects[indexPath.row].isVisited ? false : true
                         appDelegate.saveContext()
@@ -262,7 +270,8 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
-extension ViewController: GetNewRestaurantData{
+//修改CodingStyle
+extension ViewController: GetNewRestaurantData {
     func didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo) {
         restaurantInfo.insert(newRestaurantData, at: 0)
         tableView.reloadData()

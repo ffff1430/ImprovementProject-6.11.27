@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 extension UIImage {
-    func isEqual(to image: UIImage) -> Bool {
+    func isEqual(image: UIImage) -> Bool {
         return isEqual(image)
     }
 }
