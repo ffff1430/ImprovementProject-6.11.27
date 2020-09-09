@@ -24,7 +24,7 @@ class ResultViewController: UIViewController {
     var name: String = ""
     var location: String = ""
     var type: String = ""
-    var image: Data?
+    var image: URL?
     var phone: String = ""
     var map: String = ""
     var article: String = ""
@@ -50,8 +50,15 @@ class ResultViewController: UIViewController {
     func setupUI(){
         nameLabel.text = name
         typeLabel.text = type
-        if let image = image{
-            foodImage.image = UIImage(data: image)
+        if let url = image {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self.foodImage.image = image
+                    }
+                }
+            }
+            task.resume()
         }
     }
 }

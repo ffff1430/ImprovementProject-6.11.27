@@ -24,6 +24,8 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     @IBOutlet weak var saveButton: UIButton!
     
+    private var urlstr: URL?
+    
     @IBOutlet weak var nameTextField: RoundedTextField! {
         didSet {
             nameTextField.becomeFirstResponder()
@@ -105,16 +107,13 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
                 restaurant?.phone = phoneTextField.text
                 restaurant?.summary = descriptionTextView.text
                 restaurant?.isVisited = false
-                
-                if let restaurantImage = photoImage.image {
-                    restaurant?.image = getImageData(image: restaurantImage)
-                }
+                restaurant?.image = urlstr
                 
                 appDelegate.saveContext()
             }
             
             delegate?.didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo (
-                image: getImageData(image: photoImage.image),
+                image: urlstr,
                 isVisited: false,
                 name: nameTextField.text ?? "",
                 type: typeTextField.text ?? "",
@@ -124,18 +123,6 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             
             dismiss(animated: true, completion: nil)
         }
-    }
-    
-    func getImageData(image: UIImage?) -> Data? {
-        let data = image?.jpegData(compressionQuality: 0.8)
-        let filename = getDocumentsDirectory().appendingPathComponent("\(UUID().uuidString).jpeg")
-        try? data?.write(to: filename)
-        return data
-    }
-    
-    func getDocumentsDirectory() -> URL {
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        return paths[0]
     }
     
     //alert改成在func做
@@ -185,14 +172,18 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
-           if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
-               photoImage.image = selectedImage
-               photoImage.contentMode = .scaleAspectFill
-               photoImage.clipsToBounds = true
-           }
-           
-           dismiss(animated: true, completion: nil)
-       }
+        if let selectedImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage {
+            photoImage.image = selectedImage
+            photoImage.contentMode = .scaleAspectFill
+            photoImage.clipsToBounds = true
+        }
+        
+        if let imgUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL {
+            urlstr = imgUrl
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
 }
 
 extension AddRestaurantViewController: UITextFieldDelegate{

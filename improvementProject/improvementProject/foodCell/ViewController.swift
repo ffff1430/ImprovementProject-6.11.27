@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     
     let restaurant = RestaurantManager()
     
-    var restaurantInfo: [ArrangeRestaurantBaseInfo] = []
+    var arrangeRestaurantInfo: [ArrangeRestaurantBaseInfo] = []
     
     let dispatch = DispatchGroup()
     
@@ -48,6 +48,7 @@ class ViewController: UIViewController {
                 let fetchedObjects = try context.fetch(fetchRequest)
                 //第二次進來才會跑CoreData
                 if isFirstTimeLogin {
+                    //原本是一次把Data存進去，但應該是這原因造成效能瓶頸，所以我改成使用URL然後到Cell在生成圖片
                     for food in fetchedObjects{
                         let data = food.image
                         let name = food.name ?? ""
@@ -63,35 +64,31 @@ class ViewController: UIViewController {
                                                                    phone: phone,
                                                                    description: description)
                         //用insert我新增的資料才會在最上面
-                        restaurantInfo.insert(restaurant, at: 0)
+                        arrangeRestaurantInfo.insert(restaurant, at: 0)
                     }
                 } else {
                     //第一次的時候從API拿資料然後存資料到CoreData
                     restaurant.getRestaurantDatas { (data, response, error)  in
                         for food in data{
-                            let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")"
-                            self.dispatch.enter()
-                            self.fetchImage(from: url) { (datas) in
+                            let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")")
                                 let name = food.name ?? ""
                                 let type = food.type ?? ""
                                 let location = food.location ?? ""
                                 let phone = food.phone ?? ""
                                 let description = food.description ?? ""
-                                let restaurant = ArrangeRestaurantBaseInfo(image: datas,
+                                let restaurant = ArrangeRestaurantBaseInfo(image: url,
                                                                            isVisited: food.isVisited,
                                                                            name: name,
                                                                            type: type,
                                                                            location: location,
                                                                            phone: phone,
                                                                            description: description)
-                                self.restaurantInfo.append(restaurant)
-                                self.dispatch.leave()
-                            }
+                                self.arrangeRestaurantInfo.append(restaurant)
                         }
                         self.dispatch.notify(queue: .main) {
                             self.tableView.reloadData()
                             //如果沒反轉，第二次登入的時後存在CoreData的API資料會是反的
-                            for food in self.restaurantInfo.reversed() {
+                            for food in self.arrangeRestaurantInfo.reversed() {
                                 self.insertData(contactInfo: food)
                             }
                             //這邊會改變isFirstTimeLogin的值
@@ -172,24 +169,30 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return restaurantInfo.count
+        return arrangeRestaurantInfo.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as? FoodTableViewCell else { return UITableViewCell() }
         
-        let restaurantInfos = restaurantInfo[indexPath.row]
+        let restaurantInfos = arrangeRestaurantInfo[indexPath.row]
         cell.nameLabel.text = restaurantInfos.name
         cell.countryLabel.text = restaurantInfos.location
         cell.typeLabel.text = restaurantInfos.type
         if restaurantInfos.isVisited == true {
             cell.heartImage.image = UIImage(named: "like")
         }
-        DispatchQueue.main.async {
-            //修改CodingStyle
-            if let image = restaurantInfos.image {
-                cell.foodImage.image = UIImage(data: image)
+        //生完圖片就把Task給取消掉 這要就不會一直重生圖片，就不會造成滑動困難
+        if let url = restaurantInfos.image {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                if let data = data, let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        cell.foodImage.image = image
+                    }
+                }
             }
+            task.resume()
+            cell.task = task
         }
         return cell
     }
@@ -200,19 +203,19 @@ extension ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let viewcontroller = UIStoryboard(name: "Result", bundle: nil).instantiateViewController(withIdentifier: "ResultVC") as? ResultViewController else { return }
-        viewcontroller.phone = restaurantInfo[indexPath.row].phone
-        viewcontroller.map = restaurantInfo[indexPath.row].location
-        viewcontroller.article = restaurantInfo[indexPath.row].description
-        viewcontroller.name = restaurantInfo[indexPath.row].name
-        viewcontroller.location = restaurantInfo[indexPath.row].location
-        viewcontroller.type = restaurantInfo[indexPath.row].type
-        viewcontroller.image = restaurantInfo[indexPath.row].image
+        viewcontroller.phone = arrangeRestaurantInfo[indexPath.row].phone
+        viewcontroller.map = arrangeRestaurantInfo[indexPath.row].location
+        viewcontroller.article = arrangeRestaurantInfo[indexPath.row].description
+        viewcontroller.name = arrangeRestaurantInfo[indexPath.row].name
+        viewcontroller.location = arrangeRestaurantInfo[indexPath.row].location
+        viewcontroller.type = arrangeRestaurantInfo[indexPath.row].type
+        viewcontroller.image = arrangeRestaurantInfo[indexPath.row].image
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let deletAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, sourceView, complete) in
-            self?.restaurantInfo.remove(at: indexPath.row)
+            self?.arrangeRestaurantInfo.remove(at: indexPath.row)
             
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
                 let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
@@ -236,7 +239,7 @@ extension ViewController: UITableViewDelegate {
             let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             
             //一開始都是預設為False，使用三元運算子，當觸發UIContextualAction就會把觸發那段的Cell的isVisited改成另一個布林值
-            self?.restaurantInfo[indexPath.row].isVisited = self?.restaurantInfo[indexPath.row].isVisited ?? false ? false : true
+            self?.arrangeRestaurantInfo[indexPath.row].isVisited = self?.arrangeRestaurantInfo[indexPath.row].isVisited ?? false ? false : true
             
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
                 let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
@@ -252,7 +255,7 @@ extension ViewController: UITableViewDelegate {
                 }
             }
             
-            if self?.restaurantInfo[indexPath.row].isVisited == true {
+            if self?.arrangeRestaurantInfo[indexPath.row].isVisited == true {
                 cell?.heartImage.image = UIImage(named: "like")
             } else {
                 cell?.heartImage.image = nil
@@ -273,7 +276,7 @@ extension ViewController: UITableViewDelegate {
 //修改CodingStyle
 extension ViewController: GetNewRestaurantData {
     func didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo) {
-        restaurantInfo.insert(newRestaurantData, at: 0)
+        arrangeRestaurantInfo.insert(newRestaurantData, at: 0)
         tableView.reloadData()
     }
 }
