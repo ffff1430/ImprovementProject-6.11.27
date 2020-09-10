@@ -40,14 +40,17 @@ class ViewController: UIViewController {
         tableView.delegate = self
     }
     
+    //因為第一次如果UserDefaults裡面沒值會回傳false所以用這func去判斷UserDefaults是否為空的
     func isKeyPresentInUserDefaults(key: String) -> Bool {
         return UserDefaults.standard.object(forKey: key) == nil
     }
+    
     
     func getRestaurantInfoData() {
         if isFirstTimeLogin {
             dispatch.enter()
             restaurant.getRestaurantDatas { (data, response, error)  in
+                //因為我是用時間來判斷排序，因為是用時間長道短做排序，所以倒轉data才能讓最一個先得到時間
                 for food in data.reversed(){
                     let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")")
                     let name = food.name ?? ""
@@ -115,6 +118,7 @@ class ViewController: UIViewController {
         }
     }
     
+    //得到CoreData的資料
     func getCoreDatas(callback: @escaping ([RestaurantMO], AppDelegate, NSManagedObjectContext)->Void) {
         let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
         let sortDescriptor = NSSortDescriptor(key: "updateAt", ascending: false)
@@ -135,8 +139,6 @@ class ViewController: UIViewController {
             }
         }
     }
-    
-    
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -248,6 +250,7 @@ extension ViewController: UITableViewDelegate {
     }
 }
 
+//新增圖片
 extension ViewController: NSFetchedResultsControllerDelegate {
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         tableView.beginUpdates()

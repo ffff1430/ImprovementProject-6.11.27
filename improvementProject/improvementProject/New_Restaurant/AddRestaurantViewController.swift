@@ -37,6 +37,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     }
     @IBOutlet weak var photoImage: UIImageView!
     
+    //判斷有無照片
     private var notUpdateImage: Bool = true
     
     override func viewDidLoad() {
@@ -54,7 +55,6 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
         descriptionTextView.tag = 5
     }
     
-    //把delegate指定給TextField
     func setSettingInTextField(textfield: UITextField, tag: Int) {
         textfield.delegate = self
         textfield.tag = tag
@@ -70,7 +70,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
         view.endEditing(true)
     }
     
-    //已作修正改成用func去判斷TextField是否為空值
+    //修改這個方法
     func checkTextFieldisEmpty() -> Bool {
         let name = nameTextField.text ?? ""
         let type = typeTextField.text ?? ""
@@ -161,11 +161,25 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             photoImage.image = selectedImage
             photoImage.contentMode = .scaleAspectFill
             photoImage.clipsToBounds = true
+            //更換照片時更新這個變數
             notUpdateImage = false
-        }
-        
-        if let imgUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL {
-            urlstr = imgUrl
+            
+            //得到圖片的URL
+            if picker.sourceType == .camera{
+                let imgName = UUID().uuidString
+                let documentDirectory = NSTemporaryDirectory()
+                let localPath = documentDirectory.appending(imgName)
+                
+                let data = selectedImage.jpegData(compressionQuality: 0.3)! as NSData
+                data.write(toFile: localPath, atomically: true)
+                urlstr = URL.init(fileURLWithPath: localPath)
+            } else {
+                if let imgUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL {
+                    urlstr = imgUrl
+                    print(imgUrl)
+                }
+            }
+            
         }
         
         dismiss(animated: true, completion: nil)
