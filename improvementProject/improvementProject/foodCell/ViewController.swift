@@ -29,6 +29,8 @@ class ViewController: UIViewController {
     
     var fetchResultController: NSFetchedResultsController<RestaurantMO>?
     
+    var cancelTask: URLSessionDataTask?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.cellLayoutMarginsFollowReadableWidth = true
@@ -179,12 +181,17 @@ extension ViewController: UITableViewDataSource {
         if restaurantInfos.isVisited == true {
             cell.heartImage.image = UIImage(named: "like")
         }
-        //生完圖片就把Task給取消掉 這要就不會一直重生圖片，就不會造成滑動困難
+        
+        //在Cell加一個path每當準備執行task前先把上一次執行的路徑存起來，然後下面判斷路徑一樣在做task，解決閃動問題
+        cell.path = restaurantInfos.image
         if let url = restaurantInfos.image {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                if let data = data, restaurantInfos.image == url {
+                
+                guard cell.path == url else { return }
+                
+                if let data = data, let image = UIImage(data: data){
                     DispatchQueue.main.async {
-                        cell.foodImage.image = UIImage(data: data)
+                        cell.foodImage.image = image
                     }
                 }
             }
