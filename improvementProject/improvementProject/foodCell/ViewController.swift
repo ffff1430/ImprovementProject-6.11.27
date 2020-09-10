@@ -175,6 +175,7 @@ extension ViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as? FoodTableViewCell else { return UITableViewCell() }
         
         let restaurantInfos = restaurantInfo[indexPath.row]
+        cell.path = restaurantInfos.image
         cell.nameLabel.text = restaurantInfos.name
         cell.countryLabel.text = restaurantInfos.location
         cell.typeLabel.text = restaurantInfos.type
@@ -182,16 +183,14 @@ extension ViewController: UITableViewDataSource {
             cell.heartImage.image = UIImage(named: "like")
         }
         
-        //在Cell加一個path每當準備執行task前先把上一次執行的路徑存起來，然後下面判斷路徑一樣在做task，解決閃動問題
-        cell.path = restaurantInfos.image
+        
         if let url = restaurantInfos.image {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 
-                guard cell.path == url else { return }
-                
-                if let data = data, let image = UIImage(data: data){
+                //在Cell加一個path每當準備執行task前先把上一次執行的路徑存起來，然後下面判斷路徑一樣在做task，解決閃動問題
+                if let data = data, cell.path == url{
                     DispatchQueue.main.async {
-                        cell.foodImage.image = image
+                        cell.foodImage.image = UIImage(data: data)
                     }
                 }
             }
