@@ -20,14 +20,7 @@ class ResultViewController: UIViewController {
     }
     @IBOutlet weak var foodImage: UIImageView!
     
-    
-    var name: String = ""
-    var location: String = ""
-    var type: String = ""
-    var image: URL?
-    var phone: String = ""
-    var map: String = ""
-    var article: String = ""
+    var restaurant: RestaurantMO?
     var mapLocation: String = "台北101"
     
     override func viewDidLoad() {
@@ -48,9 +41,9 @@ class ResultViewController: UIViewController {
     }
     
     func setupUI(){
-        nameLabel.text = name
-        typeLabel.text = type
-        if let url = image {
+        nameLabel.text = restaurant?.name
+        typeLabel.text = restaurant?.type
+        if let url = restaurant?.image {
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let data = data, let image = UIImage(data: data) {
                     DispatchQueue.main.async {
@@ -83,17 +76,17 @@ extension ResultViewController: UITableViewDataSource{
         switch indexPath.row {
         case 0:
             let cell = tableView.dequeueReusableCell(withIdentifier: "phoneCell", for: indexPath) as! ResultTableViewCell
-            cell.phoneLabel.text = phone
+            cell.phoneLabel.text = restaurant?.phone
             cell.selectionStyle = .none
             return cell
         case 1:
             let cell = tableView.dequeueReusableCell(withIdentifier: "mapCell", for: indexPath) as! ResultTableViewCell
-            cell.locationLabel.text = map
+            cell.locationLabel.text = restaurant?.location
             cell.selectionStyle = .none
             return cell
         case 2:
             let cell = tableView.dequeueReusableCell(withIdentifier: "articleCell", for: indexPath) as! ResultTableViewCell
-            cell.articleLabel.text = article
+            cell.articleLabel.text = restaurant?.summary
             cell.selectionStyle = .none
             return cell
         case 3:

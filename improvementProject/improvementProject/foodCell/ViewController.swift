@@ -200,13 +200,7 @@ extension ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let viewcontroller = UIStoryboard(name: "Result", bundle: nil).instantiateViewController(withIdentifier: "ResultVC") as? ResultViewController else { return }
-        viewcontroller.phone = restaurantInfo[indexPath.row].phone ?? ""
-        viewcontroller.map = restaurantInfo[indexPath.row].location ?? ""
-        viewcontroller.article = restaurantInfo[indexPath.row].description
-        viewcontroller.name = restaurantInfo[indexPath.row].name ?? ""
-        viewcontroller.location = restaurantInfo[indexPath.row].location ?? ""
-        viewcontroller.type = restaurantInfo[indexPath.row].type ?? ""
-        viewcontroller.image = restaurantInfo[indexPath.row].image
+        viewcontroller.restaurant = restaurantInfo[indexPath.row]
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
     
