@@ -170,7 +170,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
                 let documentDirectory = NSTemporaryDirectory()
                 let localPath = documentDirectory.appending(imgName)
                 
-                let data = selectedImage.jpegData(compressionQuality: 0.3)! as NSData
+                guard let data = selectedImage.jpegData(compressionQuality: 0.3) as NSData? else {return}
                 data.write(toFile: localPath, atomically: true)
                 urlstr = URL.init(fileURLWithPath: localPath)
             } else {
