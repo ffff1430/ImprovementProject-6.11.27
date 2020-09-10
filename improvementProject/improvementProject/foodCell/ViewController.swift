@@ -183,6 +183,7 @@ extension ViewController: UITableViewDataSource {
         }
         //生完圖片就把Task給取消掉 這要就不會一直重生圖片，就不會造成滑動困難
         if let url = restaurantInfos.image {
+            cancelTask?.cancel()
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                 if let data = data, let image = UIImage(data: data) {
                     DispatchQueue.main.async {
@@ -191,7 +192,7 @@ extension ViewController: UITableViewDataSource {
                 }
             }
             task.resume()
-            cancelTask?.cancel()
+            cancelTask = task
         }
         return cell
     }
