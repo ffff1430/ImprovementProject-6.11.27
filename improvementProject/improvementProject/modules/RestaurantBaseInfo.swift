@@ -26,6 +26,7 @@ struct ArrangeRestaurantBaseInfo {
     var location: String
     var phone: String
     var description: String
+    var updateAt: Date
 }
 
 

@@ -9,16 +9,7 @@
 import UIKit
 import CoreData
 
-//修改CodingStyle
-protocol GetNewRestaurantData: AnyObject {
-    func didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo)
-}
-
 class AddRestaurantViewController: UIViewController , UIImagePickerControllerDelegate, UINavigationControllerDelegate{
-    
-    weak var delegate: GetNewRestaurantData?
-    
-    private let presetImage = UIImage(systemName: "photo")
     
     private var restaurant: RestaurantMO?
     
@@ -44,11 +35,9 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             descriptionTextView.layer.masksToBounds = true
         }
     }
-    @IBOutlet weak var photoImage: UIImageView! {
-        didSet {
-            photoImage.image = presetImage
-        }
-    }
+    @IBOutlet weak var photoImage: UIImageView!
+    
+    private var notUpdateImage: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -83,22 +72,26 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     //已作修正改成用func去判斷TextField是否為空值
     func checkTextFieldisEmpty() -> Bool {
-        if nameTextField.text?.isEmpty ?? true || typeTextField.text?.isEmpty ?? true || phoneTextField.text?.isEmpty ?? true || addressTextField.text?.isEmpty ?? true || descriptionTextView.text.isEmpty {
+        let name = nameTextField.text ?? ""
+        let type = typeTextField.text ?? ""
+        let phone = phoneTextField.text ?? ""
+        let address = addressTextField.text ?? ""
+        let description = descriptionTextView.text ?? ""
+        guard !name.isEmpty, !type.isEmpty, !phone.isEmpty, !address.isEmpty, !description.isEmpty else {
             return true
-        } else {
-            return false
         }
+        return false
     }
     
     @IBAction func saveButton(_ sender: Any) {
-        guard let presetImage = presetImage else { return }
-        if checkTextFieldisEmpty() {
+        if checkTextFieldisEmpty(){
             alertAction(message: "還有空格沒輸入，沒有空格才能進行儲存")
             //已作修正直接使用 isEqual(Any)就可以了，之前做法是多餘的
-        } else if photoImage.image?.isEqual(presetImage) ?? false {
+        } else if notUpdateImage {
             alertAction(message: "還有圖片沒放，圖片要有才能進行儲存")
         } else {
             saveButton.isEnabled = false
+            
             if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
                 restaurant = RestaurantMO(context: appDelegate.persistentContainer.viewContext)
                 restaurant?.name = nameTextField.text
@@ -108,18 +101,10 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
                 restaurant?.summary = descriptionTextView.text
                 restaurant?.isVisited = false
                 restaurant?.image = urlstr
+                restaurant?.updateAt = NSDate() as Date
                 
                 appDelegate.saveContext()
             }
-            
-            delegate?.didSetNewRestaurant(newRestaurantData: ArrangeRestaurantBaseInfo (
-                image: urlstr,
-                isVisited: false,
-                name: nameTextField.text ?? "",
-                type: typeTextField.text ?? "",
-                location: addressTextField.text ?? "",
-                phone: phoneTextField.text ?? "",
-                description: descriptionTextView.text ?? ""))
             
             dismiss(animated: true, completion: nil)
         }
@@ -176,6 +161,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             photoImage.image = selectedImage
             photoImage.contentMode = .scaleAspectFill
             photoImage.clipsToBounds = true
+            notUpdateImage = false
         }
         
         if let imgUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL {
@@ -188,13 +174,11 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
 
 extension AddRestaurantViewController: UITextFieldDelegate{
     
-    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if let nextTextField = view.viewWithTag(textField.tag + 1) {
             textField.resignFirstResponder()
             nextTextField.becomeFirstResponder()
         }
-        
         return true
     }
 }
