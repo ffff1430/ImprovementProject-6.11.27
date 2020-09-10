@@ -44,6 +44,7 @@ class TabViewController: UITabBarController {
         
         let page2Navigation = UINavigationController(rootViewController: page2ViewController)
         page2Navigation.tabBarItem.image = UIImage(named: "discover")
+        page2Navigation.navigationBar.topItem?.title = "Discover"
         page2Navigation.tabBarItem.title = "Discover"
         
         let page3Navigation = UINavigationController(rootViewController: page3ViewController)
