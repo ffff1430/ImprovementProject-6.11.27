@@ -165,7 +165,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             notUpdateImage = false
             
             //得到圖片的URL
-            if picker.sourceType == .camera{
+            if picker.sourceType == .camera {
                 let imgName = UUID().uuidString
                 let documentDirectory = NSTemporaryDirectory()
                 let localPath = documentDirectory.appending(imgName)

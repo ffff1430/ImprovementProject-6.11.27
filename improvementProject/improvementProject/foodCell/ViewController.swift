@@ -29,6 +29,8 @@ class ViewController: UIViewController {
     
     var fetchResultController: NSFetchedResultsController<RestaurantMO>?
     
+    var cancelTask: URLSessionDataTask?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.cellLayoutMarginsFollowReadableWidth = true
@@ -189,7 +191,7 @@ extension ViewController: UITableViewDataSource {
                 }
             }
             task.resume()
-            cell.task = task
+            cancelTask?.cancel()
         }
         return cell
     }
