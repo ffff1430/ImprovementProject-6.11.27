@@ -29,8 +29,6 @@ class ViewController: UIViewController {
     
     var fetchResultController: NSFetchedResultsController<RestaurantMO>?
     
-    var cancelTask: URLSessionDataTask?
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.cellLayoutMarginsFollowReadableWidth = true
@@ -51,7 +49,7 @@ class ViewController: UIViewController {
     func getRestaurantInfoData() {
         if isFirstTimeLogin {
             dispatch.enter()
-            restaurant.getRestaurantDatas { (data, response, error)  in
+            restaurant.getRestaurantDatas { [weak self] (data, response, error)  in
                 //因為我是用時間來判斷排序，因為是用時間長道短做排序，所以倒轉data才能讓最一個先得到時間
                 for food in data.reversed(){
                     let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")")
@@ -69,9 +67,9 @@ class ViewController: UIViewController {
                                                                phone: phone,
                                                                description: description,
                                                                updateAt: date)
-                    self.insertData(contactInfo: restaurant)
+                    self?.insertData(contactInfo: restaurant)
                 }
-                self.dispatch.leave()
+                self?.dispatch.leave()
             }
             self.dispatch.notify(queue: .main) {
                 self.getCoreDatas { (data, appDelegate, context) in
@@ -183,16 +181,14 @@ extension ViewController: UITableViewDataSource {
         }
         //生完圖片就把Task給取消掉 這要就不會一直重生圖片，就不會造成滑動困難
         if let url = restaurantInfos.image {
-            cancelTask?.cancel()
             let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                if let data = data, let image = UIImage(data: data) {
+                if let data = data, restaurantInfos.image == url {
                     DispatchQueue.main.async {
-                        cell.foodImage.image = image
+                        cell.foodImage.image = UIImage(data: data)
                     }
                 }
             }
             task.resume()
-            cancelTask = task
         }
         return cell
     }
