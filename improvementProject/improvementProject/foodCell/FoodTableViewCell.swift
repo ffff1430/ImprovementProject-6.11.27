@@ -25,6 +25,7 @@ class FoodTableViewCell: UITableViewCell {
     
     override func prepareForReuse() {
         super.prepareForReuse()
+        foodImage.image = nil
         heartImage.image = nil
     }
     
