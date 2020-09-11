@@ -34,7 +34,7 @@
                         <viewLayoutGuide key="safeArea" id="7GL-Jr-Oi4"/>
                     </view>
                     <connections>
-                        <outlet property="webView" destination="Ehm-kI-h7w" id="QE9-ND-eyA"/>
+                        <outlet property="webView" destination="Ehm-kI-h7w" id="gwC-ZN-ekw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oRT-wY-uYV" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

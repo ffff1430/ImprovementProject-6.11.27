@@ -40,18 +40,32 @@ class ResultViewController: UIViewController {
         super.viewWillDisappear(animated)
     }
     
+    private func load(fileName: String) -> UIImage? {
+        if let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(fileName) {
+            do {
+                let imageData = try Data(contentsOf: fileURL)
+                return UIImage(data: imageData)
+            } catch {
+                print("Error loading image : \(error)")
+            }
+        }
+        return nil
+    }
+    
     func setupUI(){
         nameLabel.text = restaurant?.name
         typeLabel.text = restaurant?.type
-        if let url = restaurant?.image {
-            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                if let data = data, let image = UIImage(data: data) {
-                    DispatchQueue.main.async {
+        if let image = restaurant?.image ,restaurant?.currentImage == "coreData"{
+            foodImage.image = load(fileName: image)
+        } else {
+            if let image = restaurant?.image, let url = URL(string: image) {
+                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    if let data = data, let image = UIImage(data: data){
                         self.foodImage.image = image
                     }
                 }
+                task.resume()
             }
-            task.resume()
         }
     }
 }

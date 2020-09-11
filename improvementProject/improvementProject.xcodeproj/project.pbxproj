@@ -33,6 +33,7 @@
 		DC43EA1C24F3B1C0008B41E5 /* restaurants.json in Resources */ = {isa = PBXBuildFile; fileRef = DC43EA1B24F3B1C0008B41E5 /* restaurants.json */; };
 		DC43EA1E24F49473008B41E5 /* RestaurantManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC43EA1D24F49473008B41E5 /* RestaurantManager.swift */; };
 		DC6C14FF24FE4AF600433E03 /* FoodPin.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = DC6C14FD24FE4AF500433E03 /* FoodPin.xcdatamodeld */; };
+		DC713674250B0E37008262F7 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC713673250B0E37008262F7 /* WebKit.framework */; };
 		DCA841F924F4F5C4004B6A7D /* ResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA841F824F4F5C4004B6A7D /* ResultTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -65,6 +66,7 @@
 		DC43EA1B24F3B1C0008B41E5 /* restaurants.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = restaurants.json; path = ../../info/restaurants.json; sourceTree = "<group>"; };
 		DC43EA1D24F49473008B41E5 /* RestaurantManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestaurantManager.swift; sourceTree = "<group>"; };
 		DC6C14FE24FE4AF600433E03 /* FoodPin.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = FoodPin.xcdatamodel; sourceTree = "<group>"; };
+		DC713673250B0E37008262F7 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		DCA841F824F4F5C4004B6A7D /* ResultTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC713674250B0E37008262F7 /* WebKit.framework in Frameworks */,
 				DC36F41A24F5FE9C00E0F77F /* MapKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -83,6 +86,7 @@
 		DC36F41824F5FE9C00E0F77F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DC713673250B0E37008262F7 /* WebKit.framework */,
 				DC36F41924F5FE9C00E0F77F /* MapKit.framework */,
 			);
 			name = Frameworks;

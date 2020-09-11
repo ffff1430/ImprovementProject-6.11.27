@@ -19,7 +19,7 @@ struct RestaurantBaseInfo: Codable {
 }
 
 struct ArrangeRestaurantBaseInfo {
-    var image: URL?
+    var image: String?
     var isVisited: Bool
     var name: String
     var type: String
@@ -27,6 +27,9 @@ struct ArrangeRestaurantBaseInfo {
     var phone: String
     var description: String
     var updateAt: Date
+    var currentImage: String
 }
+
+
 
 

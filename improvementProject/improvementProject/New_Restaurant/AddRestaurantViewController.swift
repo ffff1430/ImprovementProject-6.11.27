@@ -15,7 +15,7 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
     
     @IBOutlet weak var saveButton: UIButton!
     
-    private var urlstr: URL?
+    private var urlstr: String = ""
     
     @IBOutlet weak var nameTextField: RoundedTextField! {
         didSet {
@@ -102,9 +102,12 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
                 restaurant?.isVisited = false
                 restaurant?.image = urlstr
                 restaurant?.updateAt = NSDate() as Date
+                //新增一個欄位，判斷是coreData的圖片還是api的圖片
+                restaurant?.currentImage = "coreData"
                 
                 appDelegate.saveContext()
             }
+            
             
             dismiss(animated: true, completion: nil)
         }
@@ -164,14 +167,13 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             //更換照片時更新這個變數
             notUpdateImage = false
             
-            //得到圖片的URL
-            let imgName = UUID().uuidString
-            let documentDirectory = NSTemporaryDirectory()
-            let localPath = documentDirectory.appending(imgName)
-            
-            guard let data = selectedImage.jpegData(compressionQuality: 0.1) as NSData? else {return}
-            data.write(toFile: localPath, atomically: true)
-            urlstr = URL.init(fileURLWithPath: localPath)
+            //我改成存檔名圖片就不會消失了
+            let fileName = UUID().uuidString
+            guard let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(fileName) else { return }
+            if let imageData = selectedImage.jpegData(compressionQuality: 1.0) {
+               try? imageData.write(to: fileURL, options: .atomic)
+               urlstr = fileName
+            }
         }
         
         dismiss(animated: true, completion: nil)

@@ -54,13 +54,15 @@ class ViewController: UIViewController {
             restaurant.getRestaurantDatas { [weak self] (data, response, error)  in
                 //因為我是用時間來判斷排序，因為是用時間長道短做排序，所以倒轉data才能讓最一個先得到時間
                 for food in data.reversed(){
-                    let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")")
+                    let url = "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")"
                     let name = food.name ?? ""
                     let type = food.type ?? ""
                     let location = food.location ?? ""
                     let phone = food.phone ?? ""
                     let date = NSDate() as Date
                     let description = food.description ?? ""
+                    //新增的欄位拿來判斷是api的圖片，還是coredata的圖片
+                    let currentImage = "apiImage"
                     let restaurant = ArrangeRestaurantBaseInfo(image: url,
                                                                isVisited: food.isVisited,
                                                                name: name,
@@ -68,7 +70,8 @@ class ViewController: UIViewController {
                                                                location: location,
                                                                phone: phone,
                                                                description: description,
-                                                               updateAt: date)
+                                                               updateAt: date,
+                                                               currentImage: currentImage)
                     self?.insertData(contactInfo: restaurant)
                 }
                 self?.dispatch.leave()
@@ -109,6 +112,7 @@ class ViewController: UIViewController {
                     user.setValue(contactInfo.description, forKey: "summary")
                     user.setValue(contactInfo.type, forKey: "type")
                     user.setValue(contactInfo.updateAt, forKey: "updateAt")
+                    user.setValue(contactInfo.currentImage, forKey: "currentImage")
                     
                     do {
                         try managedObectContext.save()
@@ -145,6 +149,7 @@ class ViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         setNavigationItemButton()
+        
     }
     
     func setNavigationItemButton() {
@@ -170,12 +175,25 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return restaurantInfo.count
     }
+
+    //生成coreData的圖片
+    private func load(fileName: String) -> UIImage? {
+        if let fileURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent(fileName) {
+            do {
+                let imageData = try Data(contentsOf: fileURL)
+                return UIImage(data: imageData)
+            } catch {
+                print("Error loading image : \(error)")
+            }
+        }
+        return nil
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as? FoodTableViewCell else { return UITableViewCell() }
         
         let restaurantInfos = restaurantInfo[indexPath.row]
-        cell.path = restaurantInfos.image
+        cell.path = URL(string: restaurantInfos.image ?? "")
         cell.nameLabel.text = restaurantInfos.name
         cell.countryLabel.text = restaurantInfos.location
         cell.typeLabel.text = restaurantInfos.type
@@ -183,20 +201,24 @@ extension ViewController: UITableViewDataSource {
             cell.heartImage.image = UIImage(named: "like")
         }
         
-        
-        if let url = restaurantInfos.image {
-            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
-                
-                //在Cell加一個path每當準備執行task前先把上一次執行的路徑存起來，然後下面判斷路徑一樣在做task，解決閃動問題
-                guard cell.path == url else { return }
-                
-                if let data = data, let image = UIImage(data: data){
-                    DispatchQueue.main.async {
-                        cell.foodImage.image = image
+        //這邊做一個判斷如果是coreData的資料就跑load這個方法，如果是api的圖片就跑task
+        if let image = restaurantInfos.image ,restaurantInfos.currentImage == "coreData"{
+            cell.foodImage.image = load(fileName: image)
+        } else {
+            if let image = restaurantInfos.image, let url = URL(string: image) {
+                let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                    
+                    //在Cell加一個path每當準備執行task前先把上一次執行的路徑存起來，然後下面判斷路徑一樣在做task，解決閃動問題
+                    guard cell.path == url else { return }
+                    
+                    if let data = data, let image = UIImage(data: data){
+                        DispatchQueue.main.async {
+                            cell.foodImage.image = image
+                        }
                     }
                 }
+                task.resume()
             }
-            task.resume()
         }
         return cell
     }
