@@ -20,12 +20,11 @@ class FoodTableViewCell: UITableViewCell {
     @IBOutlet weak var countryLabel: UILabel!
     @IBOutlet weak var typeLabel: UILabel!
     @IBOutlet weak var heartImage: UIImageView!
-    var task: URLSessionDataTask?
+    var path: URL?
     
     
     override func prepareForReuse() {
         super.prepareForReuse()
-        task?.cancel()
         foodImage.image = nil
         heartImage.image = nil
     }

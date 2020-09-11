@@ -165,21 +165,13 @@ class AddRestaurantViewController: UIViewController , UIImagePickerControllerDel
             notUpdateImage = false
             
             //得到圖片的URL
-            if picker.sourceType == .camera{
-                let imgName = UUID().uuidString
-                let documentDirectory = NSTemporaryDirectory()
-                let localPath = documentDirectory.appending(imgName)
-                
-                guard let data = selectedImage.jpegData(compressionQuality: 0.3) as NSData? else {return}
-                data.write(toFile: localPath, atomically: true)
-                urlstr = URL.init(fileURLWithPath: localPath)
-            } else {
-                if let imgUrl = info[UIImagePickerController.InfoKey.imageURL] as? URL {
-                    urlstr = imgUrl
-                    print(imgUrl)
-                }
-            }
+            let imgName = UUID().uuidString
+            let documentDirectory = NSTemporaryDirectory()
+            let localPath = documentDirectory.appending(imgName)
             
+            guard let data = selectedImage.jpegData(compressionQuality: 0.1) as NSData? else {return}
+            data.write(toFile: localPath, atomically: true)
+            urlstr = URL.init(fileURLWithPath: localPath)
         }
         
         dismiss(animated: true, completion: nil)
