@@ -7,46 +7,143 @@
 //
 
 import UIKit
+import CoreData
 
 class ViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let restaurant = RestaurantModules()
+    let restaurant = RestaurantManager()
     
-    var restaurantInfo: [NEWrestaurant] = []
+    var arrangeRestaurantInfo: [ArrangeRestaurantBaseInfo] = []
+    
+    var restaurantInfo: [RestaurantMO] = []
+    
+    let dispatch = DispatchGroup()
+    
+    var restaurants: RestaurantMO?
+    
+    var isFirstTimeLogin: Bool = true
+    
+    var isFirstTimeLoginKey: String = "isFirstTimeLoginKey"
+    
+    var fetchResultController: NSFetchedResultsController<RestaurantMO>?
+    
+    var cancelTask: URLSessionDataTask?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        restaurant.getRestaurantDatas { (data, response, error)  in
-            for food in data{
-                if let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")") {
-                    let name = food.name ?? ""
-                    let type = food.type ?? ""
-                    let location = food.location ?? ""
-                    let phone = food.phone ?? ""
-                    let description = food.description ?? ""
-                    let restaurant = NEWrestaurant(image: url,
-                                                   isVisited: food.isVisited,
-                                                   name: name,
-                                                   type: type,
-                                                   location: location,
-                                                   phone: phone,
-                                                   description: description)
-                    self.restaurantInfo.append(restaurant)
-                }
-            }
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        }
+        tableView.cellLayoutMarginsFollowReadableWidth = true
+        //使用UserDefaults 去存是否第一次登入 第一次登入去API拿預設的餐廳，第二次登入從CoreData 拿資料
+        isFirstTimeLogin = isKeyPresentInUserDefaults(key: isFirstTimeLoginKey)
+        getRestaurantInfoData()
+        
         tableView.dataSource = self
         tableView.delegate = self
     }
     
+    //因為第一次如果UserDefaults裡面沒值會回傳false所以用這func去判斷UserDefaults是否為空的
+    func isKeyPresentInUserDefaults(key: String) -> Bool {
+        return UserDefaults.standard.object(forKey: key) == nil
+    }
+    
+    
+    func getRestaurantInfoData() {
+        if isFirstTimeLogin {
+            dispatch.enter()
+            restaurant.getRestaurantDatas { [weak self] (data, response, error)  in
+                //因為我是用時間來判斷排序，因為是用時間長道短做排序，所以倒轉data才能讓最一個先得到時間
+                for food in data.reversed(){
+                    let url = URL(string: "https://raw.githubusercontent.com/cmmobile/ImprovementProjectInfo/master/info/pic/restaurants/\(food.image ?? "")")
+                    let name = food.name ?? ""
+                    let type = food.type ?? ""
+                    let location = food.location ?? ""
+                    let phone = food.phone ?? ""
+                    let date = NSDate() as Date
+                    let description = food.description ?? ""
+                    let restaurant = ArrangeRestaurantBaseInfo(image: url,
+                                                               isVisited: food.isVisited,
+                                                               name: name,
+                                                               type: type,
+                                                               location: location,
+                                                               phone: phone,
+                                                               description: description,
+                                                               updateAt: date)
+                    self?.insertData(contactInfo: restaurant)
+                }
+                self?.dispatch.leave()
+            }
+            self.dispatch.notify(queue: .main) {
+                self.getCoreDatas { (data, appDelegate, context) in
+                    self.restaurantInfo = data
+                    self.tableView.reloadData()
+                }
+                //這邊會改變isFirstTimeLogin的值
+                UserDefaults.standard.set(false, forKey: self.isFirstTimeLoginKey)
+            }
+        } else {
+            getCoreDatas { (data, appDelegate, context) in
+                self.restaurantInfo = data
+                self.tableView.reloadData()
+            }
+        }
+    }
+    
+    //存資料到CoreData
+    func insertData(contactInfo: ArrangeRestaurantBaseInfo) {
+        
+        DispatchQueue.main.async {
+            let appDelegate = UIApplication.shared.delegate as? AppDelegate
+            
+            if let managedObectContext = appDelegate?.persistentContainer.viewContext {
+                
+                //已把驚嘆號去掉
+                if let entity = NSEntityDescription.entity(forEntityName: "RestaurantMO", in: managedObectContext) {
+                    let user = NSManagedObject(entity: entity, insertInto: managedObectContext)
+                    
+                    user.setValue(contactInfo.image, forKey: "image")
+                    user.setValue(contactInfo.isVisited, forKey: "isVisited")
+                    user.setValue(contactInfo.location, forKey: "location")
+                    user.setValue(contactInfo.name, forKey: "name")
+                    user.setValue(contactInfo.phone, forKey: "phone")
+                    user.setValue(contactInfo.description, forKey: "summary")
+                    user.setValue(contactInfo.type, forKey: "type")
+                    user.setValue(contactInfo.updateAt, forKey: "updateAt")
+                    
+                    do {
+                        try managedObectContext.save()
+                    } catch  {
+                        print("error")
+                    }
+                }
+            }
+        }
+    }
+    
+    //得到CoreData的資料
+    func getCoreDatas(callback: @escaping ([RestaurantMO], AppDelegate, NSManagedObjectContext)->Void) {
+        let fetchRequest: NSFetchRequest<RestaurantMO> = RestaurantMO.fetchRequest()
+        let sortDescriptor = NSSortDescriptor(key: "updateAt", ascending: false)
+        fetchRequest.sortDescriptors = [sortDescriptor]
+
+        if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+            let context = appDelegate.persistentContainer.viewContext
+            fetchResultController = NSFetchedResultsController(fetchRequest: fetchRequest, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
+            fetchResultController?.delegate = self
+            
+            do {
+                try fetchResultController?.performFetch()
+                if let fetchedObjects = fetchResultController?.fetchedObjects {
+                    callback(fetchedObjects, appDelegate, context)
+                }
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.rowHeight = 105
         setNavigationItemButton()
     }
     
@@ -59,41 +156,13 @@ class ViewController: UIViewController {
     }
     
     @objc func plusTap(sender: AnyObject){
-        
+        guard let viewcontroller = UIStoryboard(name: "AddRestaurant", bundle: nil).instantiateViewController(withIdentifier: "AddRestaurant") as? AddRestaurantViewController else { return }
+        present(viewcontroller, animated: true, completion: nil)
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.prefersLargeTitles = false
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-    
-    func getImage(restaurantsImagename: URL, tablecell: UITableViewCell) -> UIImage{
-        var images = UIImage()
-        let cell = tablecell as? FoodTableViewCell
-        
-        let tempDirectory = FileManager.default.temporaryDirectory
-        let imageFileUrl = tempDirectory.appendingPathComponent(restaurantsImagename.lastPathComponent)
-        if FileManager.default.fileExists(atPath: imageFileUrl.path) {
-            if let image = UIImage(contentsOfFile: imageFileUrl.path) {
-                images = image
-            }
-        } else {
-            cell?.task = URLSession.shared.dataTask(with: restaurantsImagename) { (data, response, error) in
-                 DispatchQueue.main.async {
-                    if let data = data, let image = UIImage(data: data) {
-                    try? data.write(to: imageFileUrl)
-                        images = image
-                        self.tableView.reloadData()
-                    }
-                }
-            }
-            cell?.task?.resume()
-        }
-        return images
     }
 }
 
@@ -105,16 +174,30 @@ extension ViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "FoodVC", for: indexPath) as? FoodTableViewCell else { return UITableViewCell() }
         
-        cell.heartImage.isHidden = true
-        
-        cell.heartImage.isHidden = restaurantInfo[indexPath.row].isVisited ? false : true
-        
         let restaurantInfos = restaurantInfo[indexPath.row]
+        cell.path = restaurantInfos.image
         cell.nameLabel.text = restaurantInfos.name
         cell.countryLabel.text = restaurantInfos.location
         cell.typeLabel.text = restaurantInfos.type
-        cell.foodImage.image = getImage(restaurantsImagename: restaurantInfos.image, tablecell: cell)
-
+        if restaurantInfos.isVisited == true {
+            cell.heartImage.image = UIImage(named: "like")
+        }
+        
+        
+        if let url = restaurantInfos.image {
+            let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+                
+                //在Cell加一個path每當準備執行task前先把上一次執行的路徑存起來，然後下面判斷路徑一樣在做task，解決閃動問題
+                guard cell.path == url else { return }
+                
+                if let data = data, let image = UIImage(data: data){
+                    DispatchQueue.main.async {
+                        cell.foodImage.image = image
+                    }
+                }
+            }
+            task.resume()
+        }
         return cell
     }
 }
@@ -124,30 +207,38 @@ extension ViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         
         guard let viewcontroller = UIStoryboard(name: "Result", bundle: nil).instantiateViewController(withIdentifier: "ResultVC") as? ResultViewController else { return }
-        viewcontroller.phone = restaurantInfo[indexPath.row].phone
-        viewcontroller.map = restaurantInfo[indexPath.row].location
-        viewcontroller.article = restaurantInfo[indexPath.row].description
-        viewcontroller.name = restaurantInfo[indexPath.row].name
-        viewcontroller.location = restaurantInfo[indexPath.row].location
-        viewcontroller.type = restaurantInfo[indexPath.row].type
-        viewcontroller.image = getImage(restaurantsImagename: restaurantInfo[indexPath.row].image, tablecell: UITableViewCell() )
+        viewcontroller.restaurant = restaurantInfo[indexPath.row]
         self.navigationController?.pushViewController(viewcontroller, animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let deletAction = UIContextualAction(style: .destructive, title: "Delect") { [weak self] (action, sourceView, complete) in
-            self?.restaurantInfo.remove(at: indexPath.row)
+        let deletAction = UIContextualAction(style: .destructive, title: nil) { [weak self] (action, sourceView, complete) in
             
-            self?.tableView.deleteRows(at: [indexPath], with: .fade)
+            if let appDelegate = (UIApplication.shared.delegate as? AppDelegate) {
+                let context = appDelegate.persistentContainer.viewContext
+                if let restaurantToDelete = self?.fetchResultController?.object(at: indexPath) {
+                    context.delete(restaurantToDelete)
+                }
+                
+                appDelegate.saveContext()
+            }
             complete(true)
         }
-        let heartAction = UIContextualAction(style: .normal, title: "heart") { (action, sourceView, complete) in
+        let heartAction = UIContextualAction(style: .normal, title: nil) { [weak self] (action, sourceView, complete) in
             
             let cell = tableView.cellForRow(at: indexPath) as? FoodTableViewCell
             
-            self.restaurantInfo[indexPath.row].isVisited = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            self?.getCoreDatas { (data, appDelegate, context) in
+                data[indexPath.row].isVisited = data[indexPath.row].isVisited ? false : true
+                appDelegate.saveContext()
+            }
             
-            cell?.heartImage.isHidden = self.restaurantInfo[indexPath.row].isVisited ? false : true
+            if self?.restaurantInfo[indexPath.row].isVisited == true {
+                cell?.heartImage.image = UIImage(named: "like")
+            } else {
+                cell?.heartImage.image = nil
+            }
+            
             complete(true)
         }
         deletAction.backgroundColor = UIColor.deletActionColor
@@ -157,5 +248,40 @@ extension ViewController: UITableViewDelegate {
         
         let swipe = UISwipeActionsConfiguration(actions: [deletAction, heartAction])
         return swipe
+    }
+}
+
+//新增圖片
+extension ViewController: NSFetchedResultsControllerDelegate {
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.beginUpdates()
+    }
+
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        switch type {
+        case .insert:
+            if let newIndexPath = newIndexPath {
+                tableView.insertRows(at: [newIndexPath], with: .fade)
+            }
+        case .delete:
+            if let indexPath = indexPath {
+                tableView.deleteRows(at: [indexPath], with: .fade)
+            }
+        case .update:
+            if let indexPath = indexPath {
+                tableView.reloadRows(at: [indexPath], with: .fade)
+            }
+        default:
+            tableView.reloadData()
+        }
+        
+        if let fetchedObjects = controller.fetchedObjects {
+            restaurantInfo = fetchedObjects as? [RestaurantMO] ?? []
+        }
+    }
+
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        tableView.endUpdates()
     }
 }
