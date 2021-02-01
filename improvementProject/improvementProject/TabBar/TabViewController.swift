@@ -20,10 +20,10 @@ class TabViewController: UITabBarController {
         return viewcontroller
     }()
     
-    lazy var page3ViewController: UIViewController = {
-        let viewcontroller = UIStoryboard(name: "About", bundle: nil).instantiateViewController(withIdentifier: "About")
-        return viewcontroller
-    }()
+//    lazy var page3ViewController: UIViewController = {
+//        let viewcontroller = UIStoryboard(name: "About", bundle: nil).instantiateViewController(withIdentifier: "About")
+//        return viewcontroller
+//    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,17 +43,17 @@ class TabViewController: UITabBarController {
         page1Navigation.navigationBar.scrollEdgeAppearance = appearance
         
         let page2Navigation = UINavigationController(rootViewController: page2ViewController)
-        page2Navigation.tabBarItem.image = UIImage(named: "discover")
+        page2Navigation.tabBarItem.image = UIImage(named: "favorite")
         page2Navigation.navigationBar.topItem?.title = "Discover"
         page2Navigation.tabBarItem.title = "Discover"
         
-        let page3Navigation = UINavigationController(rootViewController: page3ViewController)
-        page3Navigation.tabBarItem.image = UIImage(named: "about")
-        page3Navigation.tabBarItem.title = "About"
+//        let page3Navigation = UINavigationController(rootViewController: page3ViewController)
+//        page3Navigation.tabBarItem.image = UIImage(named: "")
+//        page3Navigation.tabBarItem.title = "About"
         
         UITabBarItem.appearance().setTitleTextAttributes([NSAttributedString.Key.foregroundColor: UIColor.tabBarItemColor], for: .normal)
         UITabBar.appearance().tintColor = UIColor.tabBarItemColor
         
-        viewControllers = [page1Navigation, page2Navigation, page3Navigation]
+        viewControllers = [page1Navigation, page2Navigation]
     }
 }

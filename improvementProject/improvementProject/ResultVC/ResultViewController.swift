@@ -61,7 +61,9 @@ class ResultViewController: UIViewController {
             if let image = restaurant?.image, let url = URL(string: image) {
                 let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
                     if let data = data, let image = UIImage(data: data){
+                        DispatchQueue.main.async {
                         self.foodImage.image = image
+                        }
                     }
                 }
                 task.resume()

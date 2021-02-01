@@ -202,7 +202,7 @@ extension ViewController: UITableViewDataSource {
         }
         
         //這邊做一個判斷如果是coreData的資料就跑load這個方法，如果是api的圖片就跑task
-        if let image = restaurantInfos.image ,restaurantInfos.currentImage == "coreData"{
+        if let image = restaurantInfos.image, restaurantInfos.currentImage == "coreData"{
             cell.foodImage.image = load(fileName: image)
         } else {
             if let image = restaurantInfos.image, let url = URL(string: image) {

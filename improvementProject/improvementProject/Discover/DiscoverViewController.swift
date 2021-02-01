@@ -19,7 +19,7 @@ class DiscoverViewController: UIViewController, WKNavigationDelegate {
     }
     
     private func goWeb() {
-        if let url = URL(string: "https://www.cmoney.tw/follow/channel/article-94503360"){
+        if let url = URL(string: "https://developer.apple.com/programs/"){
             let request = URLRequest(url: url)
             webView.load(request)
         }
